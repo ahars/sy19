@@ -41,7 +41,7 @@ sigma2 = landa2 * D2T %*% A %*% D2
 sigma3 = landa2 * D3T %*% A %*% D3
 
 # Fonction de génération d'un échantillon de données suivant un mélange de lois normales.
-melangeLoisNormales1 <- function (n, mu1, mu2, mu3, sigma1, sigma2, sigma3) {
+melangeLoisNormales1 <- function (n, pi1, pi2, pi3, mu1, mu2, mu3, sigma1, sigma2, sigma3) {
 
 	result = matrix(nrow = n, ncol = 3)
 
@@ -74,5 +74,14 @@ melangeLoisNormales1 <- function (n, mu1, mu2, mu3, sigma1, sigma2, sigma3) {
 
 ech = melangeLoisNormales1(n, mu1, mu2, mu3, sigma1, sigma2, sigma3)
 
+# Courbes de niveau de sa fonction de densité.
 
+
+# Calcul de la moyenne empirique sur cet échantillon.
+moy = c(0, 0)
+moy[1] = mean(ech[1])
+moy[2] = mean(ech[2])
+
+# Calcul de la matrice de covariance empirique sur cet échantillon.
+covar = cov(ech)
 
