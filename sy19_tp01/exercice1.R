@@ -19,9 +19,12 @@ axe2 = diag$values[2] / a * 100
 
 # ACP
 compx = princomp(x)
-biplot(compx, main = "Représentation des individus dans le premier plan factoriel", ylab = "axe 2", xlab = "axe 1"))
+
+png(file = "plots/biplot_acp1.png")
+biplot(compx, main = "Représentation des individus dans le premier plan factoriel", ylab = "axe 2", xlab = "axe 1")
 abline(lty = 1, a = 0, b = 0, col = 1)
 abline(lty = 1, a = 0, b = 1000000, col = 1)
+dev.off()
 
 # 3) à finir
 # il faut transformer la colonne en matrice avec un as.matrix
