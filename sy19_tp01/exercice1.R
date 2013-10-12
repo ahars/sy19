@@ -30,7 +30,7 @@ axe_inertie2 = diag$values[2] / a * 100
 
 compx = princomp(x)
 
-png(file = "biplot_exo1_princomp.png")
+png(file = "plots/biplot_exo1_princomp.png")
 biplot(compx, main = "Représentation des individus dans le premier plan factoriel", ylab = "axe 2", xlab = "axe 1")
 abline(lty = 1, a = 0, b = 0, col = 1)
 abline(lty = 1, a = 0, b = 1000000, col = 1)
@@ -117,7 +117,7 @@ aftd <- function (d) {
 	# Calcul composante principale
 	C = V %*% sqrt(L)
 
-	png(file = "plot_mutations_aftd.png")
+	png(file = "plots/plot_mutations_aftd.png")
 	plot(C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
 	text(C[,1], C[,2], letters[1:dimension])
 	dev.off()

@@ -14,7 +14,7 @@ airdist = as.dist(airports)
 ### Question 1)
 
 aftd = cmdscale(airdist, 27)
-png(file = "plot_airports_cmdscale.png")
+png(file = "plots/plot_airports_cmdscale.png")
 plot(aftd, type = "n", main = "Représentation de airports par cmdscale", xlab = "axe1", ylab = "axe2")
 text(aftd, labels(airdist))
 dev.off()
@@ -23,14 +23,14 @@ dev.off()
 
 # Projection de Sammon
 sammonmat = sammon(airdist)
-png(file = "plot_airports_sammon.png")
+png(file = "plots/plot_airports_sammon.png")
 plot(sammonmat$points, type = "n", main = "Représentation de airports par Sammon", xlab = "axe1", ylab = "axe2")
 text(sammonmat$points, labels(airdist))
 dev.off()
 
 # Projection de Kruskal
 kruskalmat = isoMDS(airdist)
-png(file = "plot_airports_kruskal.png")
+png(file = "plots/plot_airports_kruskal.png")
 plot(kruskalmat$points, type = "n", main = "Représentation de airports par Kruskal", xlab = "axe1", ylab = "axe2")
 text(kruskalmat$points, labels(airdist))
 dev.off()
@@ -55,19 +55,21 @@ eurodist = as.dist(euromat)
 
 # AFTD
 euroaftd = cmdscale(eurodist, 6)
+png(file = "plots/plot_airports_euro_cmdscale.png")
 plot(euroaftd, type = "n", main = "Représentation de airports européens par cmdscale", xlab = "axe1", ylab = "axe2")
 text(euroaftd, labels(eurodist))
+dev.off()
 
 # Comme on cherche à représenter les points sur un plan et non une sphère ...
 sammoneuromat = sammon(eurodist)
-png(file = "plot_airports_sammon.png")
+png(file = "plots/plot_airports_euro_sammon.png")
 plot(sammoneuromat$points, type = "n", main = "Représentation de airports européens par Sammon", xlab = "axe1", ylab = "axe2")
 text(sammoneuromat$points, labels(eurodist))
 dev.off()
 
 # Projection de Kruskal
 kruskaleuromat = isoMDS(eurodist)
-png(file = "plot_airports_kruskal.png")
+png(file = "plots/plot_airports_euro_kruskal.png")
 plot(kruskaleuromat$points, type = "n", main = "Représentation de airports européens par Kruskal", xlab = "axe1", ylab = "axe2")
 text(kruskaleuromat$points, labels(eurodist))
 dev.off()

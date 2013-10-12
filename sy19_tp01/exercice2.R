@@ -46,7 +46,7 @@ aftd <- function (d) {
 	# Calcul composante principale
 	C = V %*% sqrt(L)
 
-	png(file = "plot_mutations_aftd.png")
+	png(file = "plots/plot_mutations_aftd.png")
 	plot(C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
 	text(C[,1], C[,2], letters[1:dimension])
 	dev.off()
@@ -63,7 +63,7 @@ aftd(as.dist(mutations))
 
 aftd2 = cmdscale(as.dist(mutations), 2)
 
-png(file = "plot_mutations_cmdscale.png")
+png(file = "plots/plot_mutations_cmdscale.png")
 plot(aftd2, main = "CMDSCALE : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
 text(aftd2[,1], aftd2[,2], labels(mutmat[,1]))
 dev.off()
@@ -71,14 +71,14 @@ dev.off()
 # Question 2
 
 sammonmat = sammon(mutdist)
-png(file = "plot_mutations_sammon.png")
+png(file = "plots/plot_mutations_sammon.png")
 plot(sammonmat$points, type = "n", main = "Représentation de mutations par Sammon", xlab = "axe1", ylab = "axe2")
 text(sammonmat$points, labels(mutmat[,1]))
 dev.off()
 
 # Projection de Kruskal
 kruskalmat = isoMDS(mutdist)
-png(file = "plot_mutations_kruskal.png")
+png(file = "plots/plot_mutations_kruskal.png")
 plot(kruskalmat$points, type = "n", main = "Représentation de mutations par Kruskal", xlab = "axe1", ylab = "axe2")
 text(kruskalmat$points, labels(mutmat[,1]))
 dev.off()
@@ -87,7 +87,7 @@ dev.off()
 
 # Diagrammes de Shepard
 s1 = Shepard(mutdist, aftd2)
-png(file = "plot_mutations_shepard_cmdscale.png")
+png(file = "plots/plot_mutations_shepard_cmdscale.png")
 plot(s1, main = "diagramme de Shepard de Mutations (cmdscale)", pch = "*")
 abline(0, 1)
 dev.off()
@@ -95,13 +95,13 @@ dev.off()
 # TODO: shepard sur aftd()
 
 s2 = Shepard(mutdist, sammonmat$points)
-png(file = "plot_mutations_shepard_sammon.png")
+png(file = "plots/plot_mutations_shepard_sammon.png")
 plot(s2, main = "diagramme de Shepard de Mutations (sammon)", pch = "*")
 abline(0, 1)
 dev.off()
 
 s3 = Shepard(mutdist, kruskalmat$points)
-png(file = "plot_mutations_shepard_kruskal.png")
+png(file = "plots/plot_mutations_shepard_kruskal.png")
 plot(s3, main = "diagramme de Shepard de Mutations (kruskal)", pch = "*")
 abline(0, 1)
 dev.off()
