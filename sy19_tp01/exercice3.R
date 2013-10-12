@@ -8,14 +8,15 @@ library(MASS)
 #setwd("Z:/")
 airports <- read.table("airports2.txt", header = F, row.names = 1)
 
+# Matrice des données et tableau des distances.
 airmat = as.matrix(airports)
 airdist = as.dist(airports)
 
-### Question 1)
-
-aftd = cmdscale(airdist, 27)
+# Question 1)
+# Réalisation de l'AFTD sur les données
+aftd = cmdscale(airdist)
 png(file = "plots/plot_airports_cmdscale.png")
-plot(aftd, type = "n", main = "Représentation de airports par cmdscale", xlab = "axe1", ylab = "axe2")
+plot(aftd, type = "n", main = "Représentation de airports au moyen de l'AFTD", xlab = "axe1", ylab = "axe2")
 text(aftd, labels(airdist))
 dev.off()
 

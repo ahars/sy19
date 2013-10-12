@@ -11,7 +11,7 @@ x = t(x)
 
 # Première partie : ACP
 cent = scale(x, center = TRUE, scale = FALSE)
-s = (1 / 8) * t(cent) %*% cent
+s = (1 / 8) * t(cent) %t*% cent
 diag = eigen(s)
 
 # Les axes factoriels
