@@ -5,5 +5,71 @@
 
 library(MASS)
 
-airports = read.table("airports2.txt", header = F, row.names = 1)
+#setwd("Z:/")
+airports <- read.table("airports2.txt", header = F, row.names = 1)
+
+airmat = as.matrix(airports)
+airdist = as.dist(airports)
+
+### Question 1)
+
+aftd = cmdscale(airdist, 27)
+png(file = "plot_airports_cmdscale.png")
+plot(aftd, type = "n", main = "Représentation de airports par cmdscale", xlab = "axe1", ylab = "axe2")
+text(aftd, labels(airdist))
+dev.off()
+
+### Question 2)
+
+# Projection de Sammon
+sammonmat = sammon(airdist)
+png(file = "plot_airports_sammon.png")
+plot(sammonmat$points, type = "n", main = "Représentation de airports par Sammon", xlab = "axe1", ylab = "axe2")
+text(sammonmat$points, labels(airdist))
+dev.off()
+
+# Projection de Kruskal
+kruskalmat = isoMDS(airdist)
+png(file = "plot_airports_kruskal.png")
+plot(kruskalmat$points, type = "n", main = "Représentation de airports par Kruskal", xlab = "axe1", ylab = "axe2")
+text(kruskalmat$points, labels(airdist))
+dev.off()
+
+### Question 3)
+
+# Suppression des villes non européennes
+euromat = airmat[-1:-3,-1:-3]
+euromat = euromat[-4:-6,-4:-6]
+euromat = euromat[-2,-2]
+euromat = euromat[-5:-6,-5:-6]
+euromat = euromat[-6,-6] # Suppression Los Angeles
+euromat = euromat[-7,-7] # Suppression Montreal
+euromat = euromat[-7:-8,-7:-8] # Suppression Moscou & New-Yorj
+euromat = euromat[-8:-9,-8:-9] # Suppression Pekin & Pretoria
+euromat = euromat[-9:-10,-9:-10] # Suppression SF & Sydney
+euromat = euromat[-9,-9] # Suppression Tokyo
+euromat = euromat[-10,-10] # Suppression Wellington
+
+# Transformation en matrice de distances
+eurodist = as.dist(euromat)
+
+# AFTD
+euroaftd = cmdscale(eurodist, 6)
+plot(euroaftd, type = "n", main = "Représentation de airports européens par cmdscale", xlab = "axe1", ylab = "axe2")
+text(euroaftd, labels(eurodist))
+
+# Comme on cherche à représenter les points sur un plan et non une sphère ...
+sammoneuromat = sammon(eurodist)
+png(file = "plot_airports_sammon.png")
+plot(sammoneuromat$points, type = "n", main = "Représentation de airports européens par Sammon", xlab = "axe1", ylab = "axe2")
+text(sammoneuromat$points, labels(eurodist))
+dev.off()
+
+# Projection de Kruskal
+kruskaleuromat = isoMDS(eurodist)
+png(file = "plot_airports_kruskal.png")
+plot(kruskaleuromat$points, type = "n", main = "Représentation de airports européens par Kruskal", xlab = "axe1", ylab = "axe2")
+text(kruskaleuromat$points, labels(eurodist))
+dev.off()
+
 
