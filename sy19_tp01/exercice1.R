@@ -11,7 +11,7 @@ x = t(x)
 
 # Première partie : ACP
 cent = scale(x, center = TRUE, scale = FALSE)
-s = (1 / 8) * t(cent) %t*% cent
+s = (1 / 8) * t(cent) %*% cent
 diag = eigen(s)
 
 # Les axes factoriels
@@ -24,25 +24,40 @@ landa2 = diag$values[2]
 # princomp(x)
 
 # Calcul des pourcentages d'inertie expliquée
-a = sum(diag$values)
-axe_inertie1 = diag$values[1] / a * 100
-axe_inertie2 = diag$values[2] / a * 100
+inertie_explique = function(d) {
 
-compx = princomp(x)
+	l = length(d)
+	result = matrix(ncol = l)
+	a = sum(abs(d))
+	for (k in 1:l) {
 
-png(file = "plots/biplot_exo1_princomp.png")
-biplot(compx, main = "Représentation des individus dans le premier plan factoriel", ylab = "axe 2", xlab = "axe 1")
-abline(lty = 1, a = 0, b = 0, col = 1)
-abline(lty = 1, a = 0, b = 1000000, col = 1)
-dev.off()
+		result[k] = d[k] /a * 100
+	}
+	for (k in 2:l) {
+		result[k] = result[k] + result[k-1]
+	}
+	return (result)
+}
+inerties = inertie_explique(diag$values)
 
-# 3)
+# a = sum(diag$values)
+# axe_inertie1 = diag$values[1] / a * 100
+# axe_inertie2 = diag$values[2] / a * 100
+
+# Calcul de la matrice des composantes principales.
 m = diag(1, 2)
 u = diag$vectors
 
-# Matrice des composantes principales
 C = x %*% m %*% u
+#compx = princomp(x)
+#comp = cent %*% diag$vectors
 
+png(file = "plots/biplot_exo1_princomp.png")
+plot(C, main = "Représentation des individus dans le premier plan factoriel", ylab = "axe 2", xlab = "axe 1", col = "red")
+text(C, pos = 1, labels = c("1", "2", "3", "4", "5", "6", "7", "8"))
+dev.off()
+
+# 3)
 # Calcul qui nous donne la matrice X
 somme = C[,1] %*% t(u1) + C[,2] %*% t(u2)
 
