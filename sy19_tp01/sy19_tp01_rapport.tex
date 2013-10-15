@@ -48,13 +48,29 @@ cumulent environ 100\% de l'information.\\ \\
 % QUESTION 1.2
 \textbf{Question 2 :}\\
 La matrice de composantes principales nous permettent de représenter les 8 individus dans le premier plan factoriel :\\
-% TODO : Mettre côte à côte la matrice et le graphique.
-$C = X * M * U = \begin{pmatrix} -3.62 & 0.60 \\ 2.47 & 0.29 \\ 4.54 & -0.18 \\ -4.47 & 0.07 \\
--3.09 & -0.24 \\ 3.69 & -0.71 \\ -3.52 & -0.51 \\ 4.01 & 0.67 \end{pmatrix}$\\      
+\hspace*{0.5cm}
+\begin{tabular}{c}
+$C = X * M * U =
+\begin{pmatrix}
+-3.62 & 0.60 \\
+2.47 & 0.29 \\
+4.54 & -0.18 \\
+-4.47 & 0.07 \\
+-3.09 & -0.24 \\
+3.69 & -0.71 \\
+-3.52 & -0.51 \\
+4.01 & 0.67
+\end{pmatrix}$\\
+\end{tabular}
+\hspace*{1cm}
+\begin{tabular}{c}
 \includegraphics[height = 7cm, width = 7cm]{plots/biplot_exo1_princomp.png}\\
+\end{tabular}\\
 L'ACP applique un changement de base au jeu de données car on a cherché à obtenir une représentation fidèle du nuage de points en
 le projetant sur un espace de plus faible dimension (dans notre cas, de dimension 2) sans perdre trop d'informations.
-Les variables obtenues par la projection sont donc des combinaisons linéaires des variables du nuage initial.\\ \\
+Les variables obtenues par la projection sont donc des combinaisons linéaires des variables du nuage initial.
+\newpage
+\noindent
 % QUESTION 1.3
 \textbf{Question 3 :}\\
 $\varSigma^{k}_{\alpha=1} c_{\alpha}u_{\alpha}'$ pour \textit{k = 1} et \textit{k = 2} nous permet de retrouver notre matrice X de départ,
@@ -63,15 +79,64 @@ $\varSigma^{k}_{\alpha=1} c_{\alpha}u_{\alpha}'$ pour \textit{k = 1} et \textit{
 \subsection*{Deuxième partie : MDS}
 % QUESTION 2.1
 \textbf{Question 1 :}\\
+Le calcul de \textit{$D^{2}$} nous donne le tableau suivant (utilisation de la méthode R $dist(X, method = "euclidian")$):\\ \\
+$D^{2}$ = 
+\begin{tabular}{|ccccccc|}
+37.25 & & & & & & \\
+67.25 & 4.50 & & & & & \\
+1.00 & 48.25 & 81.25 & & & & \\
+1.00 & 31.25 & 58.25 & 2.00 & & & \\
+55.25 & 2.50 & 1.00 & 67.25 & 46.25 & & \\
+1.25 & 36.50 & 65.00 & 1.25 & 0.25 & 52.00 & \\
+58.25 & 2.50 & 1.00 & 72.25 & 51.25 & 2.00 & 58.00 \\
+\end{tabular}\\ \\
+% QUESTION 2.2
+\textbf{Question 2 :}\\
+Pour calculer la matrice des produits scalaires \textit{W}, 2 méthodes sont possibles :
 
+- En utilisant la matrice centrée des données de départ \textit{X} : \textit{W = X * $X^{t}$}
+
+- En partant du tableau des distances euclidiennes \textit{$D^{2}$} : \textit{W = $-\frac{1}{2} * Q_{n} * D^{2} * Q_{n}$} avec $n = 8$\\ \\
+% TODO : Écrire la matrice des produits scalaires W si besoin est.
+% QUESTION 2.3
+\textbf{Question 3 :}\\
+Pour déterminer si $W$ ou $\frac{1}{n}W$ est semi-définie positive, nous devons observer si les valeurs propres de la matrice $\frac{1}{n}W$
+sont positives :\\
+Le calcul des valeurs propres nous donne le même résultat que celui trouvé à partir de la matrice de covariance $S$ dans la première partie.
+Nous pouvons donc observer que nous avons 5 valeurs positives (dont 3 valeurs comprises entre $10^{-16}$ et $10^{-19}$) et
+3 valeurs négatives (comprises entre $10^{-19}$ et $10^{-15}$), nous choisissons donc de les considérer comme nulles vu qu'elles sont minimes
+(vu que les 2 premières valeurs propres regroupent environ 100\% de l'information).\\
+Donc vu que nous disposons de valeurs positives et nulles, la matrice $W$ est semi-définie positive.\\ \\
+% QUESTION 2.4
+\textbf{Question 4 :}\\
+La matrice diagonale des valeurs propres et obtenue\\
+% TODO : finir questions..
+% QUESTION 5
+\textbf{Question 5 :}\\
+% QUESTION 6
+\textbf{Question 6 :}\\
+% QUESTION 7
+\textbf{Question 7 :}\\
+
+\section*{Exercice 2 : Les données de mutations}
+% QUESTION 1
+\textbf{Question 1 :}\\
+% QUESTION 2
+\textbf{Question 2 :}\\
+% QUESTION 3
+\textbf{Question 3 :}\\
 
 \section*{Exercice 3 : Les données de distances entre aéroports}
 Dans cet exercice, nous avons travaillé sur les données contenues dans le fichier \textit{airport2.txt} qui représentent les distances de vol
 entre des aéroports situés dans le monde. L'objectif de cet exercice était d'appliquer les différentes méthodes
 de positionnement multidimensionnel à ces données et de comparer les résultats obtenus.\\ \\
-% Question 1
-\textbf{Réalisation de l'AFTD sur les données avec \textit{cmdscale} et analyse des résultats obtenus.}\\
+% QUESTION 1
+\textbf{Question 1 :}\\
 L'exécution de la fonction \textit{cmdscale} sur le tableau de distance des données nous a donné le graphique suivant :\\
-\includegraphics[height = 8cm, width = 8cm]{plots/plot_airports_cmdscale.png}\\
+\includegraphics[height = 8cm, width = 8cm]{plots/plot_airports_cmdscale.png}\\ \\
+% QUESTION 2
+\textbf{Question 2 :}\\
+% QUESTION 3
+\textbf{Question 3 :}\\
 
 \end{document}

@@ -66,27 +66,27 @@ somme = C[,1] %*% t(u1) + C[,2] %*% t(u2)
 # Deuxième partie : MDS
 # 1)
 d = dist(x, method = "euclidean")
+d2 = d^2
 
 # 2)
 w1 = cent %*% t(cent)
 
 id8 = diag(8)
-distance <- as.matrix(d)
+distance <- as.matrix(d2)
 un = matrix(rep(1, 64), 8)
 q8 = id8 - (1/8) * un
-w2 = -(1/2) * q8 %*% distance^2 %*% q8
+w2 = -(1/2) * q8 %*% distance %*% q8
 
 # 3)
 n = 1 / 8
 cent = scale(n * w1, center = TRUE, scale = FALSE)
 vari = (1/8) * t(cent) %*% cent
 diag = eigen(vari)
-# Il faut montrer que les valeurs propres sont positives ou nulles.
-
+# Il faut montrer que les valeurs propres sont positives ou nulles pour pouvoir dire que W est une matrice semi-définie positive.
 
 # 4)
-#dp = diag$vectors
-#l = diag$values * id8
+dp = diag$vectors
+l = diag$values * id8
 
 # 5)
 #aftd = cmdscale(d, 2)
