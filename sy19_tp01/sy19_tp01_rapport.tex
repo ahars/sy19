@@ -23,7 +23,8 @@
 \maketitle
 
 \section*{Introduction}
-%TODO intro
+Au cours de ce tp, nous étudions les différentes types de techniques de positionnement\\multidimensionnel, dans un premier temps théoriquement,
+puis dans un second temps sur différents types de données (\textit{mutations} et \textit{airport}) au moyen de fonctions de R.
 
 \section*{Exercice 1 : Exercice théorique}
 \subsection*{Première partie : ACP}
@@ -111,12 +112,22 @@ Nous pouvons donc observer que nous avons 5 valeurs positives (dont 3 valeurs co
 Donc vu que nous disposons de valeurs positives et nulles, la matrice $W$ est semi-définie positive.\\ \\
 % QUESTION 2.4
 \textbf{Question 4 :}\\
-La matrice diagonale des valeurs propres et obtenue\\
-% TODO : finir questions..
+La matrice diagonale des valeurs propres $L$ est obtenue par la formule suivante : $L = \lambda * I_{n}$, avec $\lambda$ correspondant
+au vecteur colonne des valeurs propres de $\frac{1}{n}W$.\\
+La matrice des vecteurs propres normés $V$ est obtenue via l'expression suivante : $V = \sqrt{n}\frac{1}{n}U$ avec $U$ la matrice des vecteurs
+propres de $W$.\\ \\
 % QUESTION 5
 \textbf{Question 5 :}\\
+Nous obtenons la représentation fournie par l'\textit{AFTD} avec l'expression des composantes principales\\suivantes : $C = V\sqrt{L}$.\\ \\
 % QUESTION 6
 \textbf{Question 6 :}\\
+La représentation de $X$ et celle fournit par l'\textit{AFTD} nous donne les graphiques suivants :\\
+\includegraphics[height = 6cm, width = 6cm]{plots/plot_exo1.png}
+\includegraphics[height = 6cm, width = 6cm]{plots/plot_exo1_aftd.png}\\
+Nous remarquons sur les 2 graphiques que nous avons 2 classes d'individus bien identifiés.
+La représentation par l'\textit{AFTD} réduit les distances qu'il y a entre chaque point.
+\newpage
+\noindent
 % QUESTION 7
 \textbf{Question 7 :}\\
 La fonction \textit{aftd()} créée est la suivante :
@@ -143,11 +154,11 @@ aftd <- function (d) {
   w = -(1/2) * q %*% d2 %*% q
 
   # Matrice associée aux vecteurs propres
-  V = eigen(1 / dimension * w)$vectors[,1:7]
+  V = eigen(1 / dimension * w)$vectors[,1:dimension]
   V = sqrt(dimension) * V
 
   # Matrice associées aux valeurs propres
-  L = diag(c(eigen(1 / dimension * w)$values[1:7]))
+  L = diag(c(eigen(1 / dimension * w)$values[1:dimension]))
 
   # Calcul composante principale
   C = V %*% sqrt(L)
@@ -167,30 +178,57 @@ aftd <- function (d) {
 \section*{Exercice 2 : Les données de mutations}
 % QUESTION 1
 \textbf{Question 1 :}\\
+\includegraphics[height = 7cm, width = 7cm]{plots/plot_mutations_aftd.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/plot_mutations_cmdscale.png}\\ \\
+Les représentations de notre fonction \textit{aftd()} et de la fonction \textit{cmdscale()} sont similaires,
+on peut\\observer 3 groupes d'espèces bien différenciés entre eux.\\ \\
 % QUESTION 2
 \textbf{Question 2 :}\\
+\includegraphics[height = 7cm, width = 7cm]{plots/plot_mutations_sammon.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/plot_mutations_kruskal.png}\\ \\
+La représentation de \textit{Kruskal} nous montre les 3 groupes présents sur les 2 représentations de l'\textit{AFTD} précédentes,
+cependant, les individus de chaque groupe sont beaucoup plus concentrés sur un même point, les distances entre les individus sont minimes.\\
+Concernant la méthode de \textit{Sammon}, nous pouvons observer au contraire que les individus sont plus\\dispersés par rapport aux autres
+représentations. Nous n'avons pas 3 groupes d'individus bien définis. La projection par cette méthode ne tend pas à minimiser les distances
+entre chaque individus du nuage de points initial.\\
+L'\textit{AFTD} semble être une méthode pour donner une représentation intermédiaire entre les méthodes de \textit{Kruskal} et de
+\textit{Sammon}.\\ \\
 % QUESTION 3
 \textbf{Question 3 :}\\
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_mutations_shepard_cmdscale.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_mutations_shepard_sammon.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_mutations_shepard_kruskal.png}\\ \\
+Ces diagrammes de \textit{Shepard} nous permettent d'apprécier la qualité des projections de données par les différentes méthodes
+(\textit{AFTD}, \textit{Sammon} et \textit{Kruskal}).
+Pour la méthode de l'\textit{AFTD}, nous remarquons que la projection des individus et sous-estimée.
+Pour la méthode de \textit{Sammon}, la projection des individus a tendance à suivre la diagonale, ce qui nous indique que la méthode de
+\textit{Sammon} nous donne une projection de meilleure qualité par rapport à la précédente.\\
+La qualité de représentation de la méthode de \textit{Kruskal} est la plus faible des 3.
+Nous remarquons que \textit{Kruskal} minimise au maximum la distance entre les individus, ce qui nous donne une vue globale plus claire,
+ce qui nous permet de dégager les groupes d'individus plus facilement alors que la méthode de \textit{Sammon} nous permet d'étudier
+les distances entre chaque individus de manière plus fiable.
+L'\textit{AFTD} nous permet une représentation intermédiaire.\\ \\
 
 \section*{Exercice 3 : Les données de distances entre aéroports}
-Dans cet exercice, nous avons travaillé sur les données contenues dans le fichier \textit{airport2.txt} qui représentent les distances de vol
-entre des aéroports situés dans le monde. L'objectif de cet exercice était d'appliquer les différentes méthodes
+Dans cet exercice, nous travaillons sur les données contenues dans le fichier \textit{airport2.txt} qui représentent les distances de vol
+entre des aéroports situés dans le monde. L'objectif de cet exercice est d'appliquer les différentes méthodes
 de positionnement multidimensionnel à ces données et de comparer les résultats obtenus.\\ \\
-L'exécution de l'AFTD au moyen de la fonction \textit{cmdscale} sur le tableau de distance des données nous a donné le graphique suivant :\\
-\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_cmdscale.png}
-\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_sammon.png}
-\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_kruskal.png}\\ \\
+L'exécution des méthodes de l'\textit{AFTD}, de \textit{Sammon} et de \textit{Kruskal} sur le tableau de distance des données
+nous donne les graphiques suivants :\\
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_cmdscale.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_sammon.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_kruskal.png}\\ \\
 % QUESTION 1
 \textbf{Question 1 :}\\
 À travers la représentation de l'\textit{AFTD} (fonction \textit{cmdscale}), nous pouvons observer que les différents continents ressortent plus ou moins
-entre eux
-Nous avons l'Amérique en haut du graphique, l'Europe au centre et les pays orientaux à bas du graphique.
+entre eux.
+Nous avons l'Amérique en haut du graphique, l'Europe au centre et les pays orientaux en bas du graphique.
 Vu que les distances ont été calculées dans un référentiel en 3 dimensions, la représentation de ces distances dans un référentiel en 2 dimensions
 altère le positionnement des aéroports entre eux mais l'ensemble reste cohérent.\\ \\
 % QUESTION 2
 \textbf{Question 2 :}\\
 La représentation de \textit{Sammon} présente une répartition globale des éléments similaire à la représentation de l'\textit{AFTD}.
-À l'intérieur de chaque groupe d'aéroports, nous notons cependant des différences sensibles (Tokyo, Pékin et Lhassa sont positionnées
+À l'intérieur de chaque groupe d'aéroports, nous notons cependant des différences\\sensibles (Tokyo, Pékin et Lhassa sont positionnées
 différemment).
 Quant à la représentation de \textit{Kruskal}, nous remarquons une disposition des aéroports similaire à la représentation de l'\textit{AFTD}.
 La différence de représentation entre celle de \textit{Sammon} et celles de \textit{Kruskal} et de l'\textit{AFTD} provient vraisemblablement
@@ -199,7 +237,7 @@ Pour comparer ces 3 représentations, nous observons les diagrammes de Shepard a
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_cmdscale.png}
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_sammon.png}
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_kruskal.png}\\ \\
-nous pouvons remarquer que les 3 diagrammes observent la même tendance au niveau de la disgression pour des valeurs intermédiaires.
+nous pouvons remarquer que les 3 diagrammes observent la même tendance au niveau de la\\disgression pour des valeurs intermédiaires.
 Cependant, pour des faibles valeurs, l'utilisation de la méthode de \textit{Sammon} semble plus précise que les 2 autres méthodes.
 Donc la méthode de \textit{Sammon} serait plus appropriée pour les petites distances entre aéroports, par exemple les distances
 des aéroports à l'intérieur d'un continent.\\ \\
@@ -210,15 +248,19 @@ Nous restreignons maintenant les aéroports à l'Europe :\\
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_sammon.png}
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_kruskal.png}\\ \\
 Nous pouvons observer que les 3 représentations sont identiques au niveau des distances entre les aéroports européens.
-Vu qu'il s'agit de courtes distances où la représentation en 3 dimensions apporte peu de modifications des distances,
-ces distances dans un espace à 2 dimensions est moins assujettie à des variations entre les méthodes utilisées.\\ \\
+Vu qu'il s'agit de courtes distances où la représentation en 3 dimensions apporte peu de\\modifications des distances,
+ces distances dans un espace à 2 dimensions est moins assujettie à des\\variations entre les méthodes utilisées.\\ \\
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_cmdscale.png}
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_sammon.png}
 \includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_kruskal.png}\\ \\
-Les diagrammes de \textit{Shepard} pour chacune des méthodes nous montre que les représentations sont identiques et fiables.
-La qualité des résultats dépend donc de la taille de l'échantillon et de la qualité initiale des données.
+Les diagrammes de \textit{Shepard} pour chacune des méthodes nous montrent que les représentations sont identiques et fiables.
+Nous pouvons affirmer que la qualité des résultats dépend donc de la taille de l'échantillon et de la qualité initiale des données.
 
 \section*{Conclusion}
-%TODO conclusion
+Tout au long de ce tp, nous avons pu voir que chaque méthode de positionnement multidimensionnel (\textit{ACP}, \textit{AFTD},
+\textit{Sammon} et \textit{Kruskal}) a ses avantages et ses inconvénients et donc qu'il peut être intéressant
+de ne pas se restreindre à l'application d'une seule méthode pour analyser un nuage d'individus selon le type de données initiale.\\
+Nous avons pu observer l'utilité du diagramme de \textit{Shepard} pour valider la qualité et la pertinence de l'application d'une méthode
+sur un type de données.
 
 \end{document}

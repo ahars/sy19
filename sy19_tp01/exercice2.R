@@ -58,12 +58,12 @@ a = aftd(as.dist(mutations))
 aftd2 = cmdscale(as.dist(mutations), 2)
 
 png(file = "plots/plot_mutations_aftd.png")
-plot(a$C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
+plot(a$C, main = "Représentation de mutations par la fonction aftd()",xlab = "axe1", ylab = "axe2", type = "n")
 text(a$C[,1], a$C[,2], labels(mutmat[,1]))
 dev.off()
 
 png(file = "plots/plot_mutations_cmdscale.png")
-plot(aftd2, main = "CMDSCALE : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
+plot(aftd2, main = "Représentation de mutations par cmdscale",xlab = "axe1", ylab = "axe2", type = "n")
 text(aftd2[,1], aftd2[,2], labels(mutmat[,1]))
 dev.off()
 
@@ -90,8 +90,6 @@ png(file = "plots/plot_mutations_shepard_cmdscale.png")
 plot(s1, main = "diagramme de Shepard de Mutations (cmdscale)", pch = "*")
 abline(0, 1)
 dev.off()
-
-# TODO: shepard sur aftd()
 
 s2 = Shepard(mutdist, sammonmat$points)
 png(file = "plots/plot_mutations_shepard_sammon.png")

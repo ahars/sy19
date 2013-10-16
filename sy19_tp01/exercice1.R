@@ -3,8 +3,6 @@
 # Auteurs : Alice Ngwembou - Antoine Hars
 # Fichier : exercice1.R
 
-# http://lotybo.free.fr/upload/File/SY09/SY09%20TP3%20Positionnement%20multidimensionnel.pdf
-
 library(MASS)
 x = matrix(c(8.5, 1.5, 3.5, 5.0, 2, 6.5, 9.5, 1.5, 8.5, 2.5, 3, 6.5, 9, 2.5, 2, 5.5), 2)
 x = t(x)
@@ -85,8 +83,8 @@ diag = eigen(vari)
 # Il faut montrer que les valeurs propres sont positives ou nulles pour pouvoir dire que W est une matrice semi-définie positive.
 
 # 4)
-dp = diag$vectors
-l = diag$values * id8
+#dp = diag$vectors
+#l = diag$values * id8
 
 # 5)
 #aftd = cmdscale(d, 2)
@@ -140,4 +138,14 @@ aftd <- function (d) {
 
 a <- new.env()
 a = aftd(d)
+
+cc = cmdscale(d)
+png(file = "plots/plot_exo1_aftd.png")
+plot(cc, main = "Représentation de X par la fonction aftd()",xlab = "axe1", ylab = "axe2", type = "n")
+text(a$C[,1], a$C[,2])
+dev.off()
+
+png(file = "plots/plot_exo1.png")
+plot(x, main = "Représentation de X",xlab = "axe1", ylab = "axe2")
+dev.off()
 
