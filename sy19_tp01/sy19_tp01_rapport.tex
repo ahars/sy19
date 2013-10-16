@@ -22,6 +22,9 @@
 
 \maketitle
 
+\section*{Introduction}
+%TODO intro
+
 \section*{Exercice 1 : Exercice théorique}
 \subsection*{Première partie : ACP}
 % QUESTION 1.1
@@ -64,7 +67,7 @@ $C = X * M * U =
 \end{tabular}
 \hspace*{1cm}
 \begin{tabular}{c}
-\includegraphics[height = 7cm, width = 7cm]{plots/biplot_exo1_princomp.png}\\
+\includegraphics[height = 5cm, width = 5cm]{plots/biplot_exo1_princomp.png}\\
 \end{tabular}\\
 L'ACP applique un changement de base au jeu de données car on a cherché à obtenir une représentation fidèle du nuage de points en
 le projetant sur un espace de plus faible dimension (dans notre cas, de dimension 2) sans perdre trop d'informations.
@@ -97,7 +100,6 @@ Pour calculer la matrice des produits scalaires \textit{W}, 2 méthodes sont pos
 - En utilisant la matrice centrée des données de départ \textit{X} : \textit{W = X * $X^{t}$}
 
 - En partant du tableau des distances euclidiennes \textit{$D^{2}$} : \textit{W = $-\frac{1}{2} * Q_{n} * D^{2} * Q_{n}$} avec $n = 8$\\ \\
-% TODO : Écrire la matrice des produits scalaires W si besoin est.
 % QUESTION 2.3
 \textbf{Question 3 :}\\
 Pour déterminer si $W$ ou $\frac{1}{n}W$ est semi-définie positive, nous devons observer si les valeurs propres de la matrice $\frac{1}{n}W$
@@ -117,6 +119,50 @@ La matrice diagonale des valeurs propres et obtenue\\
 \textbf{Question 6 :}\\
 % QUESTION 7
 \textbf{Question 7 :}\\
+La fonction \textit{aftd()} créée est la suivante :
+\begin{verbatim}
+aftd <- function (d) {
+
+  # Transformation de la matrice de distances en matrice
+  dim_mat = as.matrix(d)
+  d2 = dim_mat^2
+
+  # Récupération de la première dimension de la matrice (nbre de lignes = nbre d'individus)
+  dimension = diag(dim(dim_mat))[1]
+
+  # Création de la matrice identité
+  id = diag(dimension)
+
+  # Création de la matrice unitaire
+  un = matrix(rep(1, dimension^2), dimension)
+
+  # Création de la matrice Q de centrage
+  q = id - (1/dimension) * un
+
+  # Calcul de la matrice w
+  w = -(1/2) * q %*% d2 %*% q
+
+  # Matrice associée aux vecteurs propres
+  V = eigen(1 / dimension * w)$vectors[,1:7]
+  V = sqrt(dimension) * V
+
+  # Matrice associées aux valeurs propres
+  L = diag(c(eigen(1 / dimension * w)$values[1:7]))
+
+  # Calcul composante principale
+  C = V %*% sqrt(L)
+
+  # Calcul du pourcentage d'inertie pour les 7 premières valeurs propres
+  quality = sum(diag(L)) / sum(eigen(1 / dimension * w) $values) * 100
+
+  result <- new.env()
+  result$quality <- quality
+  result$C <- C
+  return(result)
+}
+
+\end{verbatim}
+
 
 \section*{Exercice 2 : Les données de mutations}
 % QUESTION 1
@@ -130,13 +176,49 @@ La matrice diagonale des valeurs propres et obtenue\\
 Dans cet exercice, nous avons travaillé sur les données contenues dans le fichier \textit{airport2.txt} qui représentent les distances de vol
 entre des aéroports situés dans le monde. L'objectif de cet exercice était d'appliquer les différentes méthodes
 de positionnement multidimensionnel à ces données et de comparer les résultats obtenus.\\ \\
+L'exécution de l'AFTD au moyen de la fonction \textit{cmdscale} sur le tableau de distance des données nous a donné le graphique suivant :\\
+\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_cmdscale.png}
+\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_sammon.png}
+\includegraphics[height = 7cm, width = 5cm]{plots/plot_airports_kruskal.png}\\ \\
 % QUESTION 1
 \textbf{Question 1 :}\\
-L'exécution de la fonction \textit{cmdscale} sur le tableau de distance des données nous a donné le graphique suivant :\\
-\includegraphics[height = 8cm, width = 8cm]{plots/plot_airports_cmdscale.png}\\ \\
+À travers la représentation de l'\textit{AFTD} (fonction \textit{cmdscale}), nous pouvons observer que les différents continents ressortent plus ou moins
+entre eux
+Nous avons l'Amérique en haut du graphique, l'Europe au centre et les pays orientaux à bas du graphique.
+Vu que les distances ont été calculées dans un référentiel en 3 dimensions, la représentation de ces distances dans un référentiel en 2 dimensions
+altère le positionnement des aéroports entre eux mais l'ensemble reste cohérent.\\ \\
 % QUESTION 2
 \textbf{Question 2 :}\\
+La représentation de \textit{Sammon} présente une répartition globale des éléments similaire à la représentation de l'\textit{AFTD}.
+À l'intérieur de chaque groupe d'aéroports, nous notons cependant des différences sensibles (Tokyo, Pékin et Lhassa sont positionnées
+différemment).
+Quant à la représentation de \textit{Kruskal}, nous remarquons une disposition des aéroports similaire à la représentation de l'\textit{AFTD}.
+La différence de représentation entre celle de \textit{Sammon} et celles de \textit{Kruskal} et de l'\textit{AFTD} provient vraisemblablement
+du changement de dimension appliqué pour obtenir une représentation sur 2 axes de distances obtenues dans 3 dimensions.\\ \\
+Pour comparer ces 3 représentations, nous observons les diagrammes de Shepard associés :\\
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_cmdscale.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_sammon.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_airports_shepard_kruskal.png}\\ \\
+nous pouvons remarquer que les 3 diagrammes observent la même tendance au niveau de la disgression pour des valeurs intermédiaires.
+Cependant, pour des faibles valeurs, l'utilisation de la méthode de \textit{Sammon} semble plus précise que les 2 autres méthodes.
+Donc la méthode de \textit{Sammon} serait plus appropriée pour les petites distances entre aéroports, par exemple les distances
+des aéroports à l'intérieur d'un continent.\\ \\
 % QUESTION 3
 \textbf{Question 3 :}\\
+Nous restreignons maintenant les aéroports à l'Europe :\\
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_cmdscale.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_sammon.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_kruskal.png}\\ \\
+Nous pouvons observer que les 3 représentations sont identiques au niveau des distances entre les aéroports européens.
+Vu qu'il s'agit de courtes distances où la représentation en 3 dimensions apporte peu de modifications des distances,
+ces distances dans un espace à 2 dimensions est moins assujettie à des variations entre les méthodes utilisées.\\ \\
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_cmdscale.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_sammon.png}
+\includegraphics[height = 5cm, width = 5cm]{plots/plot_euro_shepard_kruskal.png}\\ \\
+Les diagrammes de \textit{Shepard} pour chacune des méthodes nous montre que les représentations sont identiques et fiables.
+La qualité des résultats dépend donc de la taille de l'échantillon et de la qualité initiale des données.
+
+\section*{Conclusion}
+%TODO conclusion
 
 \end{document}

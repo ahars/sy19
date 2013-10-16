@@ -115,33 +115,29 @@ aftd <- function (d) {
 	# Création de la matrice Q de centrage
 	q = id - (1/dimension) * un
 
-	# Calcul de la matrice W
+	# Calcul de la matrice w
 	w = -(1/2) * q %*% d2 %*% q
-
-	# cent = scale((1 / dimension) * w, center = TRUE, scale = FALSE)
-	# vari = (1 / dimension) * t(cent) %*% cent
-	# diag = eigen(vari)
 
 	# Matrice associée aux vecteurs propres
 	V = eigen(1 / dimension * w)$vectors[,1:7]
 	V = sqrt(dimension) * V
 
 	# Matrice associées aux valeurs propres
-	L = diag(c(eigen(1 / dimension * W)$values[1:7]))
+	L = diag(c(eigen(1 / dimension * w)$values[1:7]))
 
 	# Calcul composante principale
 	C = V %*% sqrt(L)
 
-	png(file = "plots/plot_mutations_aftd.png")
-	plot(C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
-	text(C[,1], C[,2], letters[1:dimension])
-	dev.off()
-	
-	# Calcul du pourcentage d'inertie pour les 2 premières valeurs propres
-	quality2 = (diag(L)[1] + diag(L)[2]) / sum(eigen(1 / dimension * W) $values) * 100
-
 	# Calcul du pourcentage d'inertie pour les 7 premières valeurs propres
-	quality7 = (diag(L)[1] + diag(L)[2] + diag(L)[3] + diag(L)[4] + diag(L)[5] + diag(L)[6] + diag(L)[7]) / sum(eigen(1 / dimension * W) $values) * 100
-	list(points = C, quality2 = quality2, quality7 = quality7)
+	quality = sum(diag(L)) / sum(eigen(1 / dimension * w) $values) * 100
+	
+	result <- new.env()
+	result$quality <- quality
+	result$C <- C
+
+	return(result)
 }
+
+a <- new.env()
+a = aftd(d)
 

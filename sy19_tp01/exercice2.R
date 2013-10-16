@@ -32,10 +32,6 @@ aftd <- function (d) {
 	# Calcul de la matrice w
 	w = -(1/2) * q %*% d2 %*% q
 
-	# cent = scale((1 / dimension) * w, center = TRUE, scale = FALSE)
-	# vari = (1 / dimension) * t(cent) %*% cent
-	# diag = eigen(vari)
-
 	# Matrice associée aux vecteurs propres
 	V = eigen(1 / dimension * w)$vectors[,1:7]
 	V = sqrt(dimension) * V
@@ -46,22 +42,25 @@ aftd <- function (d) {
 	# Calcul composante principale
 	C = V %*% sqrt(L)
 
-	png(file = "plots/plot_mutations_aftd.png")
-	plot(C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
-	text(C[,1], C[,2], letters[1:dimension])
-	dev.off()
-	
-	# Calcul du pourcentage d'inertie pour les 2 premières valeurs propres
-	quality2 = (diag(L)[1] + diag(L)[2]) / sum(eigen(1 / dimension * w) $values) * 100
-
 	# Calcul du pourcentage d'inertie pour les 7 premières valeurs propres
-	quality7 = (diag(L)[1] + diag(L)[2] + diag(L)[3] + diag(L)[4] + diag(L)[5] + diag(L)[6] + diag(L)[7]) / sum(eigen(1 / dimension * w) $values) * 100
-	list(points = C, quality2 = quality2, quality7 = quality7)
+	quality = sum(diag(L)) / sum(eigen(1 / dimension * w) $values) * 100
+	
+	result <- new.env()
+	result$quality <- quality
+	result$C <- C
+
+	return(result)
 }
 
-aftd(as.dist(mutations))
+a <- new.env()
+a = aftd(as.dist(mutations))
 
 aftd2 = cmdscale(as.dist(mutations), 2)
+
+png(file = "plots/plot_mutations_aftd.png")
+plot(a$C, main = "AFTD : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")
+text(a$C[,1], a$C[,2], labels(mutmat[,1]))
+dev.off()
 
 png(file = "plots/plot_mutations_cmdscale.png")
 plot(aftd2, main = "CMDSCALE : Représentation de mutations sur les 2 premiers axes factoriels",xlab = "axe1", ylab = "axe2", type = "n")

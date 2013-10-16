@@ -36,6 +36,25 @@ plot(kruskalmat$points, type = "n", main = "Représentation de airports par Krus
 text(kruskalmat$points, labels(airdist))
 dev.off()
 
+# Représentation de Shepard
+png(file = "plots/plot_airports_shepard_cmdscale.png")
+s1 = Shepard(airdist, aftd)
+plot(s1, main = "diagramme de Shepard de airports (cmdscale)", pch = "*")
+abline(0, 1)
+dev.off();
+
+s2 = Shepard(airdist, sammonmat$points)
+png(file = "plots/plot_airports_shepard_sammon.png")
+plot(s2, main = "diagramme de Shepard de airports (sammon)", pch = "*")
+abline(0, 1)
+dev.off()
+
+s3 = Shepard(airdist, kruskalmat$points)
+png(file = "plots/plot_airports_shepard_kruskal.png")
+plot(s3, main = "diagramme de Shepard de airports (kruskal)", pch = "*")
+abline(0, 1)
+dev.off()
+
 ### Question 3)
 
 # Suppression des villes non européennes
@@ -55,24 +74,42 @@ euromat = euromat[-10,-10] # Suppression Wellington
 eurodist = as.dist(euromat)
 
 # AFTD
-euroaftd = cmdscale(eurodist, 6)
-png(file = "plots/plot_airports_euro_cmdscale.png")
+euroaftd = cmdscale(eurodist, 5)
+png(file = "plots/plot_euro_cmdscale.png")
 plot(euroaftd, type = "n", main = "Représentation de airports européens par cmdscale", xlab = "axe1", ylab = "axe2")
 text(euroaftd, labels(eurodist))
 dev.off()
 
 # Comme on cherche à représenter les points sur un plan et non une sphère ...
 sammoneuromat = sammon(eurodist)
-png(file = "plots/plot_airports_euro_sammon.png")
+png(file = "plots/plot_euro_sammon.png")
 plot(sammoneuromat$points, type = "n", main = "Représentation de airports européens par Sammon", xlab = "axe1", ylab = "axe2")
 text(sammoneuromat$points, labels(eurodist))
 dev.off()
 
 # Projection de Kruskal
 kruskaleuromat = isoMDS(eurodist)
-png(file = "plots/plot_airports_euro_kruskal.png")
+png(file = "plots/plot_euro_kruskal.png")
 plot(kruskaleuromat$points, type = "n", main = "Représentation de airports européens par Kruskal", xlab = "axe1", ylab = "axe2")
 text(kruskaleuromat$points, labels(eurodist))
 dev.off()
 
+# Représentation de Shepard
+png(file = "plots/plot_euro_shepard_cmdscale.png")
+s4 = Shepard(eurodist, euroaftd)
+plot(s4, main = "diagramme de Shepard de airports europe (cmdscale)", pch = "*")
+abline(0, 1)
+dev.off();
+
+s5 = Shepard(eurodist, sammoneuromat$points)
+png(file = "plots/plot_euro_shepard_sammon.png")
+plot(s5, main = "diagramme de Shepard de airports europe (sammon)", pch = "*")
+abline(0, 1)
+dev.off()
+
+s6 = Shepard(eurodist, kruskaleuromat$points)
+png(file = "plots/plot_euro_shepard_kruskal.png")
+plot(s6, main = "diagramme de Shepard de airports europe (kruskal)", pch = "*")
+abline(0, 1)
+dev.off()
 
