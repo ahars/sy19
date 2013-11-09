@@ -1,76 +1,83 @@
-gmixtmono <- function(donnees, mu=NULL, sigma2=NULL, fCEM=FALSE) {
-# modele de melange en 1D, 
-# pour K=2 composantes, proportions identiques 
+# UV : SY19 - TP02
+# Fichier : mixtmono.R
 
-    n <- length(donnees)
+gmixtmono <- function(donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 
-    # initialisation arbitraire des parametres
-    if (is.null(mu)) {
-        mu <- matrix(runif(2),nrow=2,ncol=1)
-    }
+	# modele de melange en 1D, 
+	# pour K=2 composantes, proportions identiques 
 
-    if (is.null(sigma2)) {
-        sigma2 <- matrix(1,nrow=2,ncol=1)
-    }
+	n <- length(donnees)
 
-    t <- matrix(0,ncol=2,nrow=n) # matrice des proba d'appartenance
-    z <- matrix(0,ncol=2,nrow=n) # matrice des classes
-    denscond <- matrix(0,ncol=2,nrow=n) # densites conditionnelles 
+	# initialisation arbitraire des parametres
+	if (is.null(mu)) {
+		mu <- matrix(runif(2), nrow = 2, ncol = 1)
+	}
 
-    denscond[,1] <- 
-    denscond[,2] <- 
+	if (is.null(sigma2)) {
+	sigma2 <- matrix(1, nrow = 2, ncol = 1)
+	}
 
-    logLold <- -1e250
-    logL <- 
-    print(logL)
+	t <- matrix(0, ncol = 2, nrow = n) # matrice des proba d'appartenance
+	z <- matrix(0, ncol = 2, nrow = n) # matrice des classes
+	denscond <- matrix(0, ncol = 2, nrow = n) # densites conditionnelles 
 
-    iter <- 0
-    epsi <- 1e-8
+	denscond[, 1] <- 
+	denscond[, 2] <- 
+
+	logLold <- -1e250
+	logL <- 
+	print(logL)
+
+	iter <- 0
+	epsi <- 1e-8
 
     # tant que le point de convergence n'est pas atteint
-    while(((logL-logLold)/abs(logLold)) > epsi) {
-        iter <- iter + 1
+	while (((logL - logLold) / abs(logLold)) > epsi) {
 
-        ###### etape E ######
-        t[,1] <- 
-        t[,2] <- 
+		iter <- iter + 1
 
-        ###### etape C ######
-        if (fCEM) {
-        }
+		###### etape E ######
+		t[, 1] <- 
+		t[, 2] <- 
 
-        ###### etape M ######
-        mu[1,] <- 
-        mu[2,] <- 
-        sigma2[1,] <- 
-        sigma2[2,] <- 
+		###### etape C ######
+		if (fCEM) {
+		}
 
-        denscond[,1] <- 
-        denscond[,2] <- 
+		###### etape M ######
+		mu[1, ] <- 
+		mu[2, ] <- 
+		sigma2[1, ] <- 
+		sigma2[2, ] <- 
 
-        logLold <- logL
-        logL <- 
-        print(logL)
-    }
+		denscond[, 1] <- 
+		denscond[, 2] <- 
 
-    return(list(param=list(mu=mu,sigma2=sigma2),post=t,logL=logL))
+		logLold <- logL
+		logL <- 
+		print(logL)
+	}
+
+	return(list(param = list(mu = mu, sigma2 = sigma2), post = t, logL = logL))
 }
 
 map <- function(x) {
-# regle d'affectation en fonction 
-# du maximum de probabilite 
+
+	# regle d'affectation en fonction
+	# du maximum de probabilite
 
     N <- dim(x)[1]
     K <- dim(x)[2]
     z <- matrix(0,nrow=N,ncol=K)
 
     for(n in 1:N) {
-        m <- max(x[n,])
-        for(k in 1:K) {
-            if(x[n,k] == m) break;
-        }
-        z[n,k] <- 1
-    }
 
+        m <- max(x[n, ])
+        for (k in 1:K) {
+            if (x[n, k] == m) break;
+        }
+        z[n, k] <- 1
+    }
     return(z)
 }
+
