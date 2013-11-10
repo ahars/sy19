@@ -1,25 +1,25 @@
 # UV : SY19 - TP02
 # Fichier : mixtmono.R
 
-gmixtmono <- function(donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
+gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 
-	# modele de melange en 1D, 
-	# pour K=2 composantes, proportions identiques 
+	# modele de mélange en 1D,
+	# pour K = 2 composantes, proportions identiques
 
 	n <- length(donnees)
 
-	# initialisation arbitraire des parametres
+	# initialisation arbitraire des paramètres
 	if (is.null(mu)) {
 		mu <- matrix(runif(2), nrow = 2, ncol = 1)
 	}
 
 	if (is.null(sigma2)) {
-	sigma2 <- matrix(1, nrow = 2, ncol = 1)
+		sigma2 <- matrix(1, nrow = 2, ncol = 1)
 	}
 
 	t <- matrix(0, ncol = 2, nrow = n) # matrice des proba d'appartenance
 	z <- matrix(0, ncol = 2, nrow = n) # matrice des classes
-	denscond <- matrix(0, ncol = 2, nrow = n) # densites conditionnelles 
+	denscond <- matrix(0, ncol = 2, nrow = n) # densites conditionnelles
 
 	denscond[, 1] <- 
 	denscond[, 2] <- 
@@ -58,17 +58,17 @@ gmixtmono <- function(donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 		print(logL)
 	}
 
-	return(list(param = list(mu = mu, sigma2 = sigma2), post = t, logL = logL))
+	return (list(param = list(mu = mu, sigma2 = sigma2), post = t, logL = logL))
 }
 
-map <- function(x) {
+map <- function (x) {
 
-	# regle d'affectation en fonction
-	# du maximum de probabilite
+	# règle d'affectation en fonction
+	# du maximum de probabilité
 
     N <- dim(x)[1]
     K <- dim(x)[2]
-    z <- matrix(0,nrow=N,ncol=K)
+    z <- matrix(0, nrow = N, ncol = K)
 
     for(n in 1:N) {
 
@@ -78,6 +78,6 @@ map <- function(x) {
         }
         z[n, k] <- 1
     }
-    return(z)
+    return (z)
 }
 

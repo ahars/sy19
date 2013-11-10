@@ -1,10 +1,11 @@
 # UV : SY19 - TP02
 # Fichier : randindex.R
 
-randindex <- function(P1, P2) {
-	# evaluates the similarity between the partitions P1 and P2, 
-	# by computing the adjusted Rand Index 
-	# Benjamin Quost, 2009.04.17 
+randindex <- function (P1, P2) {
+
+	# evaluates the similarity between the partitions P1 and P2,
+	# by computing the adjusted Rand Index
+	# Benjamin Quost, 2009.04.17
 
 	nbIn <- length(P1)
 	if (length(P2) != nbIn) {
@@ -17,6 +18,7 @@ randindex <- function(P1, P2) {
 	res <- NULL
 	res$comp <- cont1 * cont2 + (!cont1) * (!cont2)
 	res$rate <- sum(res$comp * lower.tri(res$comp)) / sum(lower.tri(res$comp))
-	return(res)
+
+	return (res)
 }
 
