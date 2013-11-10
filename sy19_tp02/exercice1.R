@@ -47,22 +47,27 @@ dev.off()
 
 # Question 2
 n = 100
-tab = matrix(c(0, 0, 0), n, 3)
+inertie3 = matrix(c(0), n, 1)
 for (i in 1:n) {
-	tab[i, 1] = kmeans(donnees$num,3)$withinss[1]
-	tab[i, 2] = kmeans(donnees$num,3)$withinss[2]
-	tab[i, 3] = kmeans(donnees$num,3)$withinss[3]
+	inertie3[i] = sum(kmeans(donnees$num, 3)$withinss)
 }
-#	inertie = sum(c$withinss) / 150
+
 # Question 3
-for (K in 2:5) {
-
-	for (n in 1:100) {
-
-		kK = kmeans(donnees$num,K)
-		inertie = sum(kK$withinss) / 150
+inerties = matrix(c(0, 0, 0, 0), n, 4, dimnames = list(c(), c("k = 2", "k = 3", "k = 4", "k = 5")))
+for (i in 1:100) {
+	for (k in 2:5) {
+		inerties[i, k - 1] = sum(kmeans(donnees$num, k)$withinss)
 	}
 }
+moy_i2345 = matrix(c(0), 1, 4, dimnames = list(c(), c("k = 2", "k = 3", "k = 4", "k = 5")))
+for (k in 1:4) {
+	moy_i2345[k] = mean(inerties[, k])
+}
+
+K = c(2:5)
+png(file = "plots/plot_moy_inerties_k.png")
+plot(K, moy_i2345, main = "Variation de l'inertie moyenne en fonction de K", type = "b", col = "blue")
+dev.off();
 
 # Question 4
 
