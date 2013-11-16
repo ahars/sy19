@@ -1,4 +1,5 @@
 # UV : SY19 - TP02
+# Exercice 2
 # Fichier : randindex.R
 
 randindex <- function (P1, P2) {

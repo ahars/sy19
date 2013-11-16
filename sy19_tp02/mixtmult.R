@@ -1,4 +1,5 @@
 # UV : SY19 - TP02
+# Exercice3
 # Fichier : mixtmult.R
 
 gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, fCEM = FALSE) {
@@ -11,7 +12,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	n <- dim(donnees)[1]
 	p <- dim(donnees)[2]
 
-	# initialisation arbitraire des parametres
+	# initialisation arbitraire des paramètres
 	if (is.null(pik)) {
 		pik <- rep(1,K) / K
 	}
@@ -26,10 +27,10 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 
 	t <- matrix(0, ncol = K, nrow = n) # matrice des proba d'appartenance
 	z <- matrix(0, ncol = K, nrow = n) # matrice des classes
-	denscond <- matrix(0, ncol = K, nrow = n) # densites conditionnelles
+	denscond <- matrix(0, ncol = K, nrow = n) # densités conditionnelles
 
 	for (k in 1:K) {
-		denscond[, k] <- 
+		denscond[,k] <- 
 	}
 
 	logLold <- -1e250
@@ -43,22 +44,22 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	while (((logL - logLold) / abs(logLold)) > epsi) {
 		iter <- iter + 1
 
-		###### etape E ######
+		###### étape E ######
 		t <- 
 
-		###### etape C ######
+		###### étape C ######
 		if (fCEM) {
 		}
 
-		###### etape M ######
+		###### étape M ######
 		pik <- 
 		for (k in 1:K) {
-			muk[k, ] <- 
-			Sigmak[k, ] <- 
+			muk[k,] <- 
+			Sigmak[k,] <- 
 		}
 
 		for (k in 1:K) {
-			denscond[, k] <- 
+			denscond[,k] <- 
 		}
 
 		logLold <- logL
@@ -71,9 +72,9 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 
 mvdnorm <- function (X, mu, Sigma) {
 
-	# calcul de la densite d'une loi normale multidimensionnelle
-	# d'esperance mu et de matrice de covariance Sigma
-	# aux points specifies dans le vecteur X
+	# calcul de la densité d'une loi normale multidimensionnelle
+	# d'espérance mu et de matrice de covariance Sigma
+	# aux points spécifiés dans le vecteur X
 	# Benjamin Quost, 2009.09.13
 
 	n <- dim(X)[1]
@@ -87,8 +88,8 @@ mvdnorm <- function (X, mu, Sigma) {
 
 map <- function (x) {
 
-	# regle d'affectation en fonction
-	# du maximum de probabilite
+	# règle d'affectation en fonction
+	# du maximum de probabilité
 
 	N <- dim(x)[1]
 	K <- dim(x)[2]
@@ -100,7 +101,7 @@ map <- function (x) {
 		for(k in 1:K) {
 			if(x[n, k] == m) break;
 		}
-		z[n, k] <- 1
+		z[n,k] <- 1
 	}
 	return (z)
 }

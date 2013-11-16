@@ -1,4 +1,5 @@
 # UV : SY19 - TP02
+# Exercice 2
 # Fichier : mixtmono.R
 
 gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
@@ -36,16 +37,16 @@ gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 
 		iter <- iter + 1
 
-		###### etape E ######
+		###### étape E ######
 		t[,1] <- (pi * denscond[,1]) / (pi * denscond[,1] + pi * denscond[,2])
 		t[,2] <- (pi * denscond[,2]) / (pi * denscond[,1] + pi * denscond[,2])
 
-		###### etape C ######
+		###### étape C ######
 		if (fCEM) {
 			t <- map(t)
 		}
 
-		###### etape M ######
+		###### étape M ######
 		mu[1,] <- (sum(t[,1] * donnees)) / sum(t[,1])
 		mu[2,] <- (sum(t[,2] * donnees)) / sum(t[,2])
 		sigma2[1,] <- sum(t[,1] * (donnees - mu[1])^2) / sum(t[,1])
@@ -73,9 +74,9 @@ map <- function (x) {
 
     for(n in 1:N) {
 
-        m <- max(x[n, ])
+        m <- max(x[n,])
         for (k in 1:K) {
-            if (x[n, k] == m) break;
+            if (x[n,k] == m) break;
         }
         z[n, k] <- 1
     }

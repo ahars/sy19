@@ -9,8 +9,8 @@ library(cluster)
 # Chargement des données, sélection des variables quantitatives et normalisation 
 data(iris)
 donnees <- NULL
-donnees$num <- iris[, c(1:4)]
-donnees$cls <- iris[, 5]
+donnees$num <- iris[,c(1:4)]
+donnees$cls <- iris[,5]
 
 # Question 1
 # http://www.grappa.univ-lille3.fr/~ppreux/ensg/miashs/fouilleDeDonneesII/tp/k-moyennes/
@@ -56,7 +56,7 @@ for (i in 1:n) {
 inerties = matrix(c(0, 0, 0, 0), n, 4, dimnames = list(c(), c("k = 2", "k = 3", "k = 4", "k = 5")))
 for (i in 1:100) {
 	for (k in 2:5) {
-		inerties[i, k - 1] = sum(kmeans(donnees$num, k)$withinss)
+		inerties[i,k - 1] = sum(kmeans(donnees$num, k)$withinss)
 	}
 }
 moy_i2345 = matrix(c(0), 1, 4, dimnames = list(c(), c("k = 2", "k = 3", "k = 4", "k = 5")))
