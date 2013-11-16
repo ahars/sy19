@@ -21,11 +21,11 @@ gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 	z <- matrix(0, ncol = 2, nrow = n) # matrice des classes
 	denscond <- matrix(0, ncol = 2, nrow = n) # densites conditionnelles
 
-	denscond[, 1] <- 
-	denscond[, 2] <- 
+	denscond[,1] <- dnorm(donnees, mean = mu[1], sd = sigma2[1])
+	denscond[,2] <- dnorm(donnees, mean = mu[2], sd = sigma2[2])
 
 	logLold <- -1e250
-	logL <- 
+	logL <- sum(log(apply(pi * denscond, 1, sum))) # log-vraisemblance
 	print(logL)
 
 	iter <- 0
@@ -37,24 +37,25 @@ gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 		iter <- iter + 1
 
 		###### etape E ######
-		t[, 1] <- 
-		t[, 2] <- 
+		t[,1] <- (pi * denscond[,1]) / (pi * denscond[,1] + pi * denscond[,2])
+		t[,2] <- (pi * denscond[,2]) / (pi * denscond[,1] + pi * denscond[,2])
 
 		###### etape C ######
 		if (fCEM) {
+			t <- map(t)
 		}
 
 		###### etape M ######
-		mu[1, ] <- 
-		mu[2, ] <- 
-		sigma2[1, ] <- 
-		sigma2[2, ] <- 
+		mu[1,] <- (sum(t[,1] * donnees)) / sum(t[,1])
+		mu[2,] <- (sum(t[,2] * donnees)) / sum(t[,2])
+		sigma2[1,] <- sum(t[,1] * (donnees - mu[1])^2) / sum(t[,1])
+		sigma2[2,] <- sum(t[,2] * (donnees - mu[2])^2) / sum(t[,2])
 
-		denscond[, 1] <- 
-		denscond[, 2] <- 
+		denscond[,1] <- dnorm(donnees, mean = mu[1], sd = sigma2[1])
+		denscond[,2] <- dnorm(donnees, mean = mu[2], sd = sigma2[2])
 
 		logLold <- logL
-		logL <- 
+		logL <- sum(log(apply(pi * denscond, 1, sum)))
 		print(logL)
 	}
 
