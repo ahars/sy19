@@ -30,7 +30,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	denscond <- matrix(0, ncol = K, nrow = n) # densités conditionnelles
 
 	for (k in 1:K) {
-		denscond[,k] <- 
+		denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 	}
 
 	logLold <- -1e250
@@ -49,6 +49,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 
 		###### étape C ######
 		if (fCEM) {
+			t <- map(t)
 		}
 
 		###### étape M ######

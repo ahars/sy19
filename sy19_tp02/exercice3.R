@@ -6,7 +6,7 @@
 library(MASS)
 library(cluster)
 
-source("mixtmult.R")
+#source("mixtmult.R")
 
 pi = c(0.35, 0.25, 0.4)
 
