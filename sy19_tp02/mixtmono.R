@@ -2,7 +2,7 @@
 # Exercice 2
 # Fichier : mixtmono.R
 
-gmixtmono <- function (donnees, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
+gmixtmono <- function (donnees, pi, mu = NULL, sigma2 = NULL, fCEM = FALSE) {
 
 	# modele de mélange en 1D,
 	# pour K = 2 composantes, proportions identiques

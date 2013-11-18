@@ -14,7 +14,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 
 	# initialisation arbitraire des paramètres
 	if (is.null(pik)) {
-		pik <- rep(1,K) / K
+		pik <- rep(1, K) / K
 	}
 
 	if (is.null(muk)) {
@@ -22,7 +22,8 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	}
 
 	if (is.null(Sigmak)) {
-		Sigmak <- matrix(1,nrow = K, ncol = p)
+		#Sigmak <- matrix(1, nrow = K, ncol = p)
+		Sigmak <- diag(1, 2)
 	}
 
 	t <- matrix(0, ncol = K, nrow = n) # matrice des proba d'appartenance
@@ -32,9 +33,16 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	for (k in 1:K) {
 		denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 	}
+	
+	print("muk")
+	print(muk)
+	print("sigmak")
+	print(Sigmak)
 
 	logLold <- -1e250
-	logL <- 
+	logL <- sum(log(apply(pik * denscond, 1, sum))) # log-vraisemblance
+	#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
+	print("logL")
 	print(logL)
 
 	iter <- 0
@@ -42,10 +50,11 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 
 	# tant que le point de convergence n'est pas atteint
 	while (((logL - logLold) / abs(logLold)) > epsi) {
+
 		iter <- iter + 1
 
 		###### étape E ######
-		t <- 
+		t <- (pik[1] * denscond[,1]) / (sum(pik[2] * denscond[,2]))
 
 		###### étape C ######
 		if (fCEM) {
@@ -53,18 +62,25 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		}
 
 		###### étape M ######
-		pik <- 
+		pik <- sum(t)
 		for (k in 1:K) {
-			muk[k,] <- 
-			Sigmak[k,] <- 
+			muk[k,] <- sum(t * X) / sum(t)
+			Sigmak[k,] <- sum(t %*% (X - muk[k,]) %*% t(X - muk[k,]))
 		}
 
+		print("muk")
+		print(muk)
+		print("sigmak")
+		print(Sigmak)
+
 		for (k in 1:K) {
-			denscond[,k] <- 
+			denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 		}
 
 		logLold <- logL
-		logL <- 
+		logL <- sum(log(apply(pik * denscond, 1, sum)))
+		#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
+		print("logL")
 		print(logL)
 	}
 
@@ -82,7 +98,7 @@ mvdnorm <- function (X, mu, Sigma) {
 	p <- dim(X)[2]
 
 	Xc <- X - matrix(rep(mu, n), nrow = n, byrow = T)
-	densite <- exp(-1 / 2 * diag(Xc %*% ginv(Sigma) %*%t (Xc))) / ((2 * pi)^(p / 2) * det(Sigma)^(1 / 2))
+	densite <- exp(-1 / 2 * diag(Xc %*% ginv(Sigma) %*% t(Xc))) / ((2 * pi)^(p / 2) * det(Sigma)^(1 / 2))
 
 	return (densite)
 }
@@ -96,11 +112,11 @@ map <- function (x) {
 	K <- dim(x)[2]
 	z <- matrix(0, nrow = N, ncol = K)
 
-	for(n in 1:N) {
-		m <- max(x[n, ])
+	for (n in 1:N) {
+		m <- max(x[n,])
 
-		for(k in 1:K) {
-			if(x[n, k] == m) break;
+		for (k in 1:K) {
+			if (x[n,k] == m) break;
 		}
 		z[n,k] <- 1
 	}

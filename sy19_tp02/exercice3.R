@@ -6,7 +6,7 @@
 library(MASS)
 library(cluster)
 
-#source("mixtmult.R")
+source("mixtmult.R")
 
 pi = c(0.35, 0.25, 0.4)
 
@@ -20,4 +20,7 @@ sigma3 = diag(c(1, 2))
 
 prop <- rmultinom(1, 3000, pi)
 X <- rbind(mvrnorm(prop[1], mu1, sigma1), mvrnorm(prop[2], mu2, sigma2), mvrnorm(prop[3], mu3, sigma3))
+
+r = gmixtmulti(X)
+r$param
 
