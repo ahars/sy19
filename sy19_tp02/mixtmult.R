@@ -33,16 +33,9 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 	}
 
-	print("muk")
-	print(muk)
-	print("sigmak")
-	print(Sigmak)
-
 	logLold <- -1e250
-	# logL <- sum(log(apply(pik * denscond, 1, sum))) # log-vraisemblance
+	logL <- sum(log(apply(pik * denscond, 1, sum))) # log-vraisemblance
 	# logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
-	logL <- 
-	print("logL")
 	print(logL)
 
 	iter <- 0
@@ -54,7 +47,8 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		iter <- iter + 1
 
 		###### étape E ######
-		t <- (pik[1] * denscond[,1]) / (sum(pik[2] * denscond[,2]))
+		t[,1] <- (pik[1] * denscond[,1]) / ((pik[1] * denscond[,1]) + (pik[2] * denscond[,2]))
+		t[,2] <- (pik[2] * denscond[,2]) / ((pik[1] * denscond[,1]) + (pik[2] * denscond[,2]))
 
 		###### étape C ######
 		if (fCEM) {
@@ -62,27 +56,24 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		}
 
 		###### étape M ######
-		pik <- sum(t) / n
+		pik[1] <- sum(t[,1]) / n
+		pik[2] <- sum(t[,2]) / n
+		
 		for (k in 1:K) {
-			muk[k,] <- sum(t * X) / sum(t)
-			Sigmak[k,] <- sum(t %*% (X - muk[k,]) %*% t(X - muk[k,])) / sum(t)
+			muk[k,] <- sum(t[,k] * X) / sum(t[,k])
+			Sigmak[k,] <- sum(t[,k] %*% (X - matrix(rep(muk[k,], n), nrow = n, byrow = T)) %*% t(X - matrix(rep(muk[k,], n), nrow = n, byrow = T))) / sum(t[,k])
 		}
-
-		print("muk")
-		print(muk)
-		print("sigmak")
-		print(Sigmak)
 
 		for (k in 1:K) {
 			denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 		}
 
+		Xc <- X - matrix(rep(muk, n), nrow = n, byrow = T)
 		logLold <- logL
-		logL <- sum() + sum()
+		logL <- (-1 / 2) * ((sum(t[,1]) %*% Xc %*% ginv(Sigmak) %*% t(Xc)) + (sum(t[,2]) %*% Xc %*% ginv(Sigmak) %*% t(Xc))) - (1 / 2) * (sum(t[,1]) * log(abs(Sigmak[,1])) + sum(t[,2]) * log(det(Sigmak[,2]))) + (sum(t[,1]) * log(pik[1]) + sum(t[,2] * log(pik[2])))
 		
 		#sum(log(apply(pik * denscond[], 1, sum)))
 		#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
-		print("logL")
 		print(logL)
 	}
 
