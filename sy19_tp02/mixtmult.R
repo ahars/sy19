@@ -22,7 +22,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	}
 
 	if (is.null(Sigmak)) {
-		Sigmak <- matrix(1, nrow = K, ncol = p)
+		Sigmak <- matrix(c(1,0,0,1), nrow = K, ncol = p)
 	}
 
 	t <- matrix(0, ncol = K, nrow = n) # matrice des proba d'appartenance
@@ -68,9 +68,10 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 			denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 		}
 
-		Xc <- X - matrix(rep(muk, n), nrow = n, byrow = T)
+		Xc1 <- X - matrix(rep(muk[1,], n), nrow = n, byrow = T)
+		Xc2 <- X - matrix(rep(muk[2,], n), nrow = n, byrow = T)
 		logLold <- logL
-		logL <- (-1 / 2) * ((sum(t[,1]) %*% Xc %*% ginv(Sigmak) %*% t(Xc)) + (sum(t[,2]) %*% Xc %*% ginv(Sigmak) %*% t(Xc))) - (1 / 2) * (sum(t[,1]) * log(abs(Sigmak[,1])) + sum(t[,2]) * log(det(Sigmak[,2]))) + (sum(t[,1]) * log(pik[1]) + sum(t[,2] * log(pik[2])))
+		logL <- (-1 / 2) * ((sum(t[,1]) %*% Xc1 %*% ginv(Sigmak) %*% t(Xc)) + (sum(t[,2]) %*% Xc2 %*% ginv(Sigmak) %*% t(Xc))) - (1 / 2) * (sum(t[,1]) * log(abs(Sigmak[,1])) + sum(t[,2]) * log(det(Sigmak[,2]))) + (sum(t[,1]) * log(pik[1]) + sum(t[,2] * log(pik[2])))
 		
 		#sum(log(apply(pik * denscond[], 1, sum)))
 		#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
