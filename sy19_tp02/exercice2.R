@@ -19,19 +19,19 @@ x = c(rnorm(1000), rnorm(1000, mean = 6, sd = 5))
 sc = scale(x)
 
 r1 = gmixtmono(x, pi, NULL, NULL, FALSE)
-r1$param
+#r1$param
 
-r2 = gmixtmono(sc, pi, NULL, NULL, FALSE)
-r2$param
+#r2 = gmixtmono(sc, pi, NULL, NULL, FALSE)
+#r2$param
 
 c1 = gmixtmono(x, pi, NULL, NULL, TRUE)
-c1$param
+#c1$param
 
-c2 = gmixtmono(sc, pi, NULL, NULL, TRUE)
-c2$param
+#c2 = gmixtmono(sc, pi, NULL, NULL, TRUE)
+#c2$param
 
 # 4
-d = matrix(x, ncol = 2)
-k2 =  kmeans(d, 2, nstart = 20)
-clusplot(d, k2$cluster, color = TRUE, shade = TRUE)
+#d = matrix(x, ncol = 2)
+#k2 =  kmeans(d, 2, nstart = 20)
+#clusplot(d, k2$cluster, color = TRUE, shade = TRUE)
 

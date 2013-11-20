@@ -1,5 +1,5 @@
 # UV : SY19 - TP02
-# Exercice3
+# Exercice 3
 # Fichier : mixtmult.R
 
 gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, fCEM = FALSE) {
@@ -22,8 +22,7 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	}
 
 	if (is.null(Sigmak)) {
-		#Sigmak <- matrix(1, nrow = K, ncol = p)
-		Sigmak <- diag(1, 2)
+		Sigmak <- matrix(1, nrow = K, ncol = p)
 	}
 
 	t <- matrix(0, ncol = K, nrow = n) # matrice des proba d'appartenance
@@ -33,15 +32,16 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 	for (k in 1:K) {
 		denscond[,k] <- mvdnorm(donnees, muk[,k], Sigmak)
 	}
-	
+
 	print("muk")
 	print(muk)
 	print("sigmak")
 	print(Sigmak)
 
 	logLold <- -1e250
-	logL <- sum(log(apply(pik * denscond, 1, sum))) # log-vraisemblance
-	#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
+	# logL <- sum(log(apply(pik * denscond, 1, sum))) # log-vraisemblance
+	# logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
+	logL <- 
 	print("logL")
 	print(logL)
 
@@ -62,10 +62,10 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		}
 
 		###### étape M ######
-		pik <- sum(t)
+		pik <- sum(t) / n
 		for (k in 1:K) {
 			muk[k,] <- sum(t * X) / sum(t)
-			Sigmak[k,] <- sum(t %*% (X - muk[k,]) %*% t(X - muk[k,]))
+			Sigmak[k,] <- sum(t %*% (X - muk[k,]) %*% t(X - muk[k,])) / sum(t)
 		}
 
 		print("muk")
@@ -78,7 +78,9 @@ gmixtmulti <- function (donnees, pik = NULL, muk = NULL, Sigmak = NULL, K = 2, f
 		}
 
 		logLold <- logL
-		logL <- sum(log(apply(pik * denscond, 1, sum)))
+		logL <- sum() + sum()
+		
+		#sum(log(apply(pik * denscond[], 1, sum)))
 		#logL <- sum(log(apply(matrix(rep(pik, n), nrow = n, byrow = T) * denscond, 1, sum)))
 		print("logL")
 		print(logL)
