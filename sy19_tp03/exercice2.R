@@ -1,8 +1,3 @@
-# UV : SY19 - TP03
-# Exercice 2
-# Auteurs : Alice Ngwembou - Antoine Hars
-# Fichier : exercice2.R
-
 library(MASS)
 library(nnet)
 
@@ -69,7 +64,7 @@ model1 <- nnet(x, T, size = 1, decay = 0, softmax = TRUE, maxit = 500)
 # Valeur des poids
 model1$wts
 
-# Proba à postériori d'appartenance aux classes
+# Proba ï¿½ postï¿½riori d'appartenance aux classes
 Z1 <- predict(model1, grille)
 
 boxplot(model1$wts)
@@ -91,10 +86,12 @@ contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 
 # 2.
 boxplot(model2$wts)
+# Dessin de chaque composante du poids.
+plot(model2$wts)
 
 
 # 3.
-# à répéter plusieurs fois.
+# ï¿½ rï¿½pï¿½ter plusieurs fois.
 model2 <- nnet(x, T, size = 5, decay = 0, softmax = TRUE, maxit = 500)
 model2$wts
 Z2 <- predict(model2, grille)
@@ -109,11 +106,12 @@ contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 
 boxplot(model2$wts)
 
-# Nous n'obtenons pas les mêmes résultats à chaque fois pour l'estimation
-# des poids et des frontières de décision.
+# Nous n'obtenons pas les mï¿½mes rï¿½sultats ï¿½ chaque fois pour l'estimation
+# des poids et des frontiï¿½res de dï¿½cision.
+
 
 # 4.
-# Phénomène à expliquer..
+# Phï¿½nomï¿½ne ï¿½ expliquer..
 
 ##############################################################################
 
@@ -152,6 +150,16 @@ T <- class.ind(couleur)
 model10 <- nnet(x, T, size = 10, decay = 0, softmax = TRUE, maxit = 500)
 
 boxplot(model1$wts, model2$wts, model3$wts, model4$wts, model5$wts, model6$wts, model7$wts, model8$wts, model9$wts, model10$wts)
+plot(model1$wts)
+plot(model2$wts)
+plot(model3$wts)
+plot(model4$wts)
+plot(model5$wts)
+plot(model6$wts)
+plot(model7$wts)
+plot(model8$wts)
+plot(model9$wts)
+plot(model10$wts)
 
 
 # 2.
@@ -246,6 +254,76 @@ contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z10[,2] - pmax(Z10[,1], Z10[,3], Z10[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 
+# Calcul de la probabilitï¿½ d'erreur
+pred1 <- predict(model1, x)
+pred2 <- predict(model2, x)
+pred3 <- predict(model3, x)
+pred4 <- predict(model4, x)
+pred5 <- predict(model5, x)
+pred6 <- predict(model6, x)
+pred7 <- predict(model7, x)
+pred8 <- predict(model8, x)
+pred9 <- predict(model9, x)
+pred10 <- predict(model10, x)
+
+classes_predict <- function(pred) {
+
+	n = dim(pred)[1]
+	m = dim(pred)[2]
+	for (i in 1:n) {
+		mm = max(pred[i,])
+		for (j in 1:m) {
+			if (pred[i,j] == mm) {
+				pred[i,j] = 1
+			} else {
+				pred[i,j] = 0
+			}
+		}
+	}
+	return(pred)
+}
+
+cp1 = classes_predict(pred1)
+cp2 = classes_predict(pred2)
+cp3 = classes_predict(pred3)
+cp4 = classes_predict(pred4)
+cp5 = classes_predict(pred5)
+cp6 = classes_predict(pred6)
+cp7 = classes_predict(pred7)
+cp8 = classes_predict(pred8)
+cp9 = classes_predict(pred9)
+cp10 = classes_predict(pred10)
+
+proba_erreur_emp <- function(T, CP) {
+
+	proba = 0
+	n = dim(T)[1]
+	m = dim(T)[2]
+	for (i in 1:n) {
+		CP[i,] = T[i,] - CP[i,]
+		comp = 0
+		for (j in 1:m) {
+			if (CP[i,j] == 0) {
+				comp = comp + 1
+			}
+		}
+		if (comp != m) {
+			proba = proba + 1
+		}
+	}
+	return(proba / n)
+}
+
+proba1 = proba_erreur_emp(T, cp1)
+proba2 = proba_erreur_emp(T, cp2)
+proba3 = proba_erreur_emp(T, cp3)
+proba4 = proba_erreur_emp(T, cp4)
+proba5 = proba_erreur_emp(T, cp5)
+proba6 = proba_erreur_emp(T, cp6)
+proba7 = proba_erreur_emp(T, cp7)
+proba8 = proba_erreur_emp(T, cp8)
+proba9 = proba_erreur_emp(T, cp9)
+proba10 = proba_erreur_emp(T, cp10)
 
 # 3.
 set.seed(1)
@@ -373,6 +451,13 @@ zp <- Z10[,2] - pmax(Z10[,1], Z10[,3], Z10[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 
 
-# 4.
-# Commentaires sur la variabilité des modèles en fonction de size.
+pe1 <- predict(x)
+
+
+# Commentaires sur la variabilitï¿½ des modï¿½les en fonction de size.
+
+##############################################################################
+
+# QUESTION 4.
+
 
