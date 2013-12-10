@@ -36,7 +36,9 @@ couleur <- rep("red", n)
 couleur[c==2] <- "blue"
 couleur[c==3] <- "green"
 couleur[c==4] <- "yellow"
-plot(x, col = couleur)
+
+png("plots/frontiere_bayes_q1_1.png")
+plot(x, col = couleur, main = "frontières de décision sur les observations de 4 lois normales")
 
 # Frontiere de Bayes
 len <- 50
@@ -59,6 +61,7 @@ contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 
 zp <- Z[,2] - pmax(Z[,1], Z[,3], Z[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
 # 2.
 # Donner la règle de Bayes
@@ -93,7 +96,6 @@ zp <- Z2[,1] - pmax(Z2[,2], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z2[,2] - pmax(Z2[,1], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-
 
 # 2.
 boxplot(model2$wts)
