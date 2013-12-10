@@ -89,13 +89,15 @@ model2 <- nnet(x, T, size = 5, decay = 0, softmax = TRUE, maxit = 500)
 model2$wts
 Z2 <- predict(model2, grille)
 
-plot(x, col = couleur)
+png("plots/frontiere_bayes_q2_1.png")
+plot(x, col = couleur, main = "frontières de décision sur les observations de 4 lois normales")
 zp <- Z2[,4] - pmax(Z2[,3], Z2[,2], Z2[,1])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z2[,1] - pmax(Z2[,2], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z2[,2] - pmax(Z2[,1], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
 # 2.
 boxplot(model2$wts)
@@ -109,13 +111,15 @@ model2 <- nnet(x, T, size = 5, decay = 0, softmax = TRUE, maxit = 500)
 model2$wts
 Z2 <- predict(model2, grille)
 
-plot(x, col = couleur)
+png("plots/frontiere_bayes_q2_2.png")
+plot(x, col = couleur, main = "frontières de décision sur les observations de 4 lois normales")
 zp <- Z2[,4] - pmax(Z2[,3], Z2[,2], Z2[,1])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z2[,1] - pmax(Z2[,2], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z2[,2] - pmax(Z2[,1], Z2[,3], Z2[,4])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
 boxplot(model2$wts)
 

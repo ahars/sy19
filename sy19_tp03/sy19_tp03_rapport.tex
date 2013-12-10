@@ -48,20 +48,22 @@ $\Sigma_{4}$ = $\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$\\
 
 \textbf{1. Dessiner le frontières de décision obtenues avec un réseau de neurones sur les données (pour decay = 0 et size = 5.)}\\
 L'exécution du code donnée nous permet d'observer le graphique suivant :\\
-\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q1_1.png}\\
+\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q2_1.png}\\
 Nous pouvons observer sur ce graphiques les différentes observations de l'ensemble d'apprentissage avec une couleur précise et les frontières de décision obtenues.\\
-On peut dire que tous les points de chaque loi normale ne se situe pas exactement du bon coté des frontières de décision.\\ \\
+On peut dire que tous les points de chaque loi normale ne se situent pas exactement du bon coté des frontières de décision.\\ \\
 \textbf{2. Visualiser l'estimation des poids.}\\
 %TODO
 \textbf{3. Obtient-on les mêmes résultats à chaque fois pour l'estimation des poids et des frontières de décision lorsqu'on lance plusieurs fois la procédure $nnet$ ?}\\
-%TODO
+En relançant la procédure $nnet$, nous n'obtenons pas les mêmes frontières de décision.\\
+\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q2_1.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q2_2.png}\\
 \textbf{4. Comment expliquer ce phénomène ?}\\
 %TODO
+il semble que ce phénomène vient du fait que le générateur de nombre aléatoire de R n'est pas réinitialisé entre les 2 exécutions de $nnet$.
 
 \subsubsection*{Question 3 :}
 
 On désire voir l'influence du nombre de neurones dans la couche cachée. Pour cela, pour decay = 0, faire varier size de 1 à 10 (nombre de neurones dans la couche cachée).\\ \\
-
 \textbf{1. Commenter le nombre de "poids" à estimer.}\\
 %TODO
 \textbf{2. Afficher les frontières de décision (4 seulement). Que constater sur la forme des frontières et sur le nombre de points mal-classés quand size augmente ?}\\
