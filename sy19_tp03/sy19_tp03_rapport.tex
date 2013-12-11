@@ -74,21 +74,31 @@ il semble que ce phénomène vient du fait que le générateur de nombre aléato
 
 On désire voir l'influence du nombre de neurones dans la couche cachée. Pour cela, pour decay = 0, faire varier size de 1 à 10 (nombre de neurones dans la couche cachée).\\ \\
 \textbf{1. Commenter le nombre de "poids" à estimer.}\\
-%TODO
+La variation de $size$ nous donne les graphiques suivants par rapport à l'estimation des poids optimaux :\\
+\includegraphics[height = 7cm, width = 7cm]{plots/poids_q3_1.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/probas_erreur_q3_1.png}\\
+Nous pouvons observer que pour les plus grandes valeurs de $size$, la probabilité d'erreur sur les poids optimaux est très faibles.
+Si le nombre de neurones cachés est faible, il y a une plus grande chance qu'un point soit mal classé.\\
+On observe, sur l'estimation des erreurs en fonction de $size$, que la probabilité d'erreur diminue entre 1 et 4, puis remonte pour redescendre entre 6 et 8, remonter pour $size$ = 9 et enfin être très basse pour une valeur de $size$ égale à 10.\\ \\
 \textbf{2. Afficher les frontières de décision (4 seulement). Que constater sur la forme des frontières et sur le nombre de points mal-classés quand size augmente ?}\\
+Nous choisissons donc d'afficher les frontières de décision pour $size$ égal à 1, 4, 6 et 10 d'après l'évolution des probabilités d'erreur vue précédemment.\\
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_2_1.png}
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_2_4.png}\\
-\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_2_7.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_2_6.png}
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_2_10.png}\\
-%TODO
+Pour le premier graphique, où la probabilité d'erreur est la plus élevée, les frontières de décision sont des droites donc le nombre de points mal-classé se retrouve à être assez conséquent par rapport aux autres graphiques dont les frontières de décision sont des courbes.\\
+On remarque plus $size$ augmente, plus les courbes sont complexes. Par exemple, entre le troisième et le quatrième graphique, l'inclusion ou non du point bleu au dessus des points jaunes sur les graphiques, montre la complexité du modèle et nous confirme les valeurs des probabilités d'erreur du mauvais classement d'un point du modèle. $size$ = 4 est plus précis que $size$ = 6 mais moins précis que $size$ = 10. 
 \textbf{3. Relancer la procédure sur un nouveau jeu de données en faisant varier size de 1 à 10.}\\
+\includegraphics[height = 7cm, width = 7cm]{plots/poids_q3_3.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/probas_erreur_q3_3.png}\\
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_3_1.png}
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_3_4.png}\\
-\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_3_7.png}
+\includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_3_6.png}
 \includegraphics[height = 7cm, width = 7cm]{plots/frontiere_bayes_q3_3_10.png}\\
-%TODO
+Nous pouvons observer que les frontières de décision et les estimations des poids optimaux ne changent pas avec un nouveau jeu de données du fait que nous veillons à ré-initialiser le générateur de nombre aléatoire du logiciel R avant tout exécution de l'algorithme.\\ \\
 \textbf{4. Que dire de la variabilité du modèle en fonction de size ?}\\
-%TODO
+Plus la taille du réseau de neurone augmente, plus les frontières de décision seront complexes et précises, la probailité qu'un point soit mal-classé est plus faible lorsque $size$ augmente.\\
+Cependant, nous avons observé que lorsque le nombre de neurones cachés se rapproche de la valeur du nombre lois utilisées pour fournir l'ensemble d'observation, la probabilité d'erreur de l'appartenance d'un point à une classe est plus faible que pour les valeurs de $size$ adjacentes.
 
 \subsubsection*{Question 4 :}
 
