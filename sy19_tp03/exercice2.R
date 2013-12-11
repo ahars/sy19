@@ -6,8 +6,6 @@
 library(MASS)
 library(nnet)
 
-set.seed(1)
-
 # QUESTION 1
 
 # 1.
@@ -728,9 +726,8 @@ dev.off()
 # 1.
 p = 5
 
-# À CHECKER POUR LA CLASSE 5
 simul <- function (x, t, n, p) {
-
+	
 	# Préparation de la matrice des données mélangées
 	data = matrix(nrow = n, ncol = 3)
 	# Préparation de la matrice des classes mélangées
@@ -738,21 +735,22 @@ simul <- function (x, t, n, p) {
 
 	i = 1
 	m = n / p
-	# Iterateur des partitions de données        
+
+	# Itérateur des partitions de données
 	for (ki in 1:p) {
-		# Iterateur du nombre d'éléments par partition de données
+	# Itérateur du nombre d'éléments par partition de données
 		for (j in 1:m) {
 			# On prend nb ligne de la matrice x modifiée,
 			# une ligne s'en va à chaque itération
 			d = dim(x)[1]
-			# Si x est un vecteur, d = null dans R 
-			#(oui il n'a pas de dimensions c'est comme ça épicétou)
+			# Si x est un vecteur, d = null dans R
+			# (oui il n'a pas de dimensions c'est comme ça épicétou)
 			if (is.null(d)) {
-				# On met arbitrairement la dimension en ligne d à 1
+				# On met arbitrairement la dimension en ligne à 1
 				d = 1
 				# On met arbitrairement le rand à 1 (bah oui il reste plus qu'une ligne)
 				rand = 1
-				# La matrice des données mélangées prend les valeurs de x en colonne 1 et 2 
+				# La matrice des données mélangées prend les valeurs de x en colonne 1 et 2
 				data[i,c(1,2)] = x
 				# Pareil pour la matrice des classes mélangées
 				classe[i, c(1,2)] = t
@@ -779,6 +777,19 @@ simul <- function (x, t, n, p) {
 	return (result)
 }
 
+proba_erreur <- function(T, CP) {
+	comp = 0
+        proba = 0
+        n = length(T)
+        for (i in 1:n) {
+                comp = T[i] - CP[i]  
+                if (comp != 0) {
+                        proba = proba + 1
+                }
+        }
+        return(proba / n)
+}
+
 t_sexe = simul(x_sexe, T_sexe, n, p)
 couleur3 <- rep("pink", n)
 couleur3[t_sexe$classe[,1] == "0"] <- "cyan"
@@ -802,31 +813,31 @@ set.seed(1)
 model1 <- nnet(t_sexe$data[-1:-40,1:2], t_sexe$classe[-1:-40,], size = 6, decay = 0.001, softmax = TRUE, maxit = 500)
 pred1 <- predict(model1, t_sexe$data[1:40,1:2])
 cp1 = classes_predict(pred1)
-proba1 = proba_erreur_emp(t_sexe$classe[1:40], cp1)
+proba1 = proba_erreur(t_sexe$classe[1:40], cp1[,1])
 
 set.seed(1)
 model2 <- nnet(t_sexe$data[-41:-80,1:2], t_sexe$classe[-41:-80,], size = 6, decay = 0.001, softmax = TRUE, maxit = 500)
 pred2 <- predict(model2, t_sexe$data[41:80,1:2])
 cp2 = classes_predict(pred2)
-proba2 = proba_erreur_emp(t_sexe$classe[41:80], cp2)
+proba2 = proba_erreur(t_sexe$classe[41:80], cp2[,1])
 
 set.seed(1)
 model3 <- nnet(t_sexe$data[-81:-120,1:2], t_sexe$classe[-81:-120,], size = 6, decay = 0.001, softmax = TRUE, maxit = 500)
 pred3 <- predict(model3, t_sexe$data[81:120,1:2])
 cp3 = classes_predict(pred3)
-proba3 = proba_erreur_emp(t_sexe$classe[81:120], cp3)
+proba3 = proba_erreur(t_sexe$classe[81:120], cp3[,1])
 
 set.seed(1)
 model4 <- nnet(t_sexe$data[-121:-160,1:2], t_sexe$classe[-121:-160,], size = 6, decay = 0.001, softmax = TRUE, maxit = 500)
 pred4 <- predict(model4, t_sexe$data[121:160,1:2])
 cp4 = classes_predict(pred4)
-proba4 = proba_erreur_emp(t_sexe$classe[121:160], cp4)
+proba4 = proba_erreur(t_sexe$classe[121:160], cp4[,1])
 
 set.seed(1)
 model5 <- nnet(t_sexe$data[-161:-200,1:2], t_sexe$classe[-161:-200,], size = 6, decay = 0.001, softmax = TRUE, maxit = 500)
 pred5 <- predict(model5, t_sexe$data[161:200,1:2])
 cp5 = classes_predict(pred5)
-proba5 = proba_erreur_emp(t_sexe$classe[161:200], cp5)
+proba5 = proba_erreur(t_sexe$classe[161:200], cp5[,1])
 
 probas_sexe = c(proba1, proba2, proba3, proba4, proba5)
 pe = mean(probas_sexe)
@@ -870,38 +881,35 @@ Z3 <- predict(model3, grille)
 Z4 <- predict(model4, grille)
 Z5 <- predict(model5, grille)
 
+png(file = "plots/frontiere_q5_2_1.png")
+plot(t_sexe$data[-1:-40,1:2], col = couleur3, main = "Frontières de décision crabs modèle 1 selon le sexe")
+zp <- Z1[,1] - Z1[,2]
+contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_sexe$data[41:200], col = couleur3[41:200])
+png(file = "plots/frontiere_q5_2_2.png")
+plot(t_sexe$data[-41:-80,1:2], col = couleur3, main = "Frontières de décision crabs modèle 2 selon le sexe")
+zp <- Z2[,1] - Z2[,2]
+contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-zp <- Z1[,1] - max(Z1[,2])
+png(file = "plots/frontiere_q5_2_3.png")
+plot(t_sexe$data[-81:-120,1:2], col = couleur3, main = "Frontières de décision crabs modèle 3 selon le sexe")
+zp <- Z3[,1] - Z3[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z1[,2] - max(Z1[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_sexe$data[-41:-80], col = couleur3)
-zp <- Z2[,1] - max(Z2[,2])
+png(file = "plots/frontiere_q5_2_4.png")
+plot(t_sexe$data[-121:-160,1:2], col = couleur3, main = "Frontières de décision crabs modèle 4 selon le sexe")
+zp <- Z4[,1] - Z4[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z2[,2] - max(Z2[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_sexe$data[-81:-120], col = couleur3)
-zp <- Z3[,1] - max(Z2[,2])
+png(file = "plots/frontiere_q5_2_5.png")
+plot(t_sexe$data[-161:-200,1:2], col = couleur3, main = "Frontières de décision crabs modèle 5 selon le sexe")
+zp <- Z5[,1] - Z5[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z3[,2] - max(Z2[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-
-plot(t_sexe$data[-121:-160], col = couleur3)
-zp <- Z4[,1] - max(Z4[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z4[,2] - max(Z4[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-
-plot(t_sexe$data[-161:-200], col = couleur3)
-zp <- Z5[,1] - max(Z5[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z5[,2] - max(Z5[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-
+dev.off()
 
 ##############################################################################
 
@@ -910,37 +918,37 @@ contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 # 1.
 # Estimation sur la probabilité d'erreur sur la COULEUR
 set.seed(1)
-model1 <- nnet(t_color$data[-1:-40,1:2], t_color$classe[-1:-40,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
-pred1 <- predict(model1, t_color$data[1:40,1:2])
-cp1 = classes_predict(pred1)
-proba1 = proba_erreur_emp(t_color$classe[1:40], cp1)
+model1c <- nnet(t_color$data[-1:-40,1:2], t_color$classe[-1:-40,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
+pred1c <- predict(model1c, t_color$data[1:40,1:2])
+cp1c = classes_predict(pred1c)
+proba1c = proba_erreur(t_color$classe[1:40], cp1c[,1])
 
 set.seed(1)
-model2 <- nnet(t_color$data[-41:-80,1:2], t_color$classe[-41:-80,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
-pred2 <- predict(model2, t_color$data[41:80,1:2])
-cp2 = classes_predict(pred2)
-proba2 = proba_erreur_emp(t_color$classe[41:80], cp2)
+model2c <- nnet(t_color$data[-41:-80,1:2], t_color$classe[-41:-80,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
+pred2c <- predict(model2c, t_color$data[41:80,1:2])
+cp2c = classes_predict(pred2c)
+proba2c = proba_erreur(t_color$classe[41:80], cp2c[,1])
 
 set.seed(1)
-model3 <- nnet(t_color$data[-81:-120,1:2], t_color$classe[-81:-120,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
-pred3 <- predict(model3, t_color$data[81:120,1:2])
-cp3 = classes_predict(pred3)
-proba3 = proba_erreur_emp(t_color$classe[81:120], cp3)
+model3c <- nnet(t_color$data[-81:-120,1:2], t_color$classe[-81:-120,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
+pred3c <- predict(model3c, t_color$data[81:120,1:2])
+cp3c = classes_predict(pred3c)
+proba3c = proba_erreur(t_color$classe[81:120], cp3c[,1])
 
 set.seed(1)
-model4 <- nnet(t_color$data[-121:-160,1:2], t_color$classe[-121:-160,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
-pred4 <- predict(model4, t_color$data[121:160,1:2])
-cp4 = classes_predict(pred4)
-proba4 = proba_erreur_emp(t_color$classe[121:160], cp4)
+model4c <- nnet(t_color$data[-121:-160,1:2], t_color$classe[-121:-160,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
+pred4c <- predict(model4c, t_color$data[121:160,1:2])
+cp4c = classes_predict(pred4c)
+proba4c = proba_erreur(t_color$classe[121:160], cp4c[,1])
 
 set.seed(1)
-model5 <- nnet(t_color$data[-161:-200,1:2], t_color$classe[-161:-200,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
-pred5 <- predict(model5, t_color$data[161:200,1:2])
-cp5 = classes_predict(pred5)
-proba5 = proba_erreur_emp(t_color$classe[161:200], cp5)
+model5c <- nnet(t_color$data[-161:-200,1:2], t_color$classe[-161:-200,], size = 5, decay = 0.001, softmax = TRUE, maxit = 500)
+pred5c <- predict(model5c, t_color$data[161:200,1:2])
+cp5c = classes_predict(pred5c)
+proba5c = proba_erreur(t_color$classe[161:200], cp5c[,1])
 
-probas_color = c(proba1, proba2, proba3, proba4, proba5)
-pe = mean(probas_color)
+probas_color = c(proba1c, proba2c, proba3c, proba4c, proba5c)
+pec = mean(probas_color)
 
 png(file = "plots/tp3_probas_erreur_couleur.png")
 plot(probas_color, xlab = "Modèle", ylab ="Probabilité d'erreur", main = "Probabilités d'erreur de chaque modèle pour la couleur")
@@ -983,33 +991,33 @@ Z3 <- predict(model3, grille)
 Z4 <- predict(model4, grille)
 Z5 <- predict(model5, grille)
 
-plot(t_color$data, col = couleur4)
-zp <- Z1[,1] - max(Z1[,2])
+png(file = "plots/frontiere_q6_2_1.png")
+plot(t_color$data[-1:-40,1:2], col = couleur4, main = "Frontières de décision crabs modèle 1 selon l'espèce")
+zp <- Z1[,1] - Z1[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z1[,2] - max(Z1[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_color$data, col = couleur4)
-zp <- Z2[,1] - max(Z2[,2])
+png(file = "plots/frontiere_q6_2_2.png")
+plot(t_color$data[-41:-80,1:2], col = couleur4, main = "Frontières de décision crabs modèle 2 selon l'espèce")
+zp <- Z2[,1] - Z2[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z2[,2] - max(Z2[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_color$data, col = couleur4)
-zp <- Z3[,1] - max(Z3[,2])
+png(file = "plots/frontiere_q6_2_3.png")
+plot(t_color$data[-81:-120,1:2], col = couleur4, main = "Frontières de décision crabs modèle 3 selon l'espèce")
+zp <- Z3[,1] - Z3[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z3[,2] - max(Z3[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_color$data, col = couleur4)
-zp <- Z4[,1] - max(Z4[,2])
+png(file = "plots/frontiere_q6_2_4.png")
+plot(t_color$data[-121:-160,1:2], col = couleur4, main = "Frontières de décision crabs modèle 4 selon l'espèce")
+zp <- Z4[,1] - Z4[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z4[,2] - max(Z4[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
-plot(t_color$data, col = couleur4)
-zp <- Z5[,1] - max(Z5[,2])
+png(file = "plots/frontiere_q6_2_5.png")
+plot(t_color$data[-161:-200,1:2], col = couleur4, main = "Frontières de décision crabs modèle 5 selon l'espèce")
+zp <- Z5[,1] - Z5[,2]
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-zp <- Z5[,2] - max(Z5[,2])
-contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+dev.off()
 
