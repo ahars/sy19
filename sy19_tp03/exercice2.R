@@ -730,53 +730,53 @@ p = 5
 
 # À CHECKER POUR LA CLASSE 5
 simul <- function (x, t, n, p) {
-    
-      # Préparation de la matrice des données mélangées
-        data = matrix(nrow = n, ncol = 3)
-      # Préparation de la matrice des classes mélangées
-        classe = matrix(nrow = n, ncol = 2)
-      
-        i = 1
-        m = n / p
-        # Iterateur des partitions de données        
-        for (ki in 1:p) {
-                # Iterateur du nombre d'éléments par partition de données
-                for (j in 1:m) {
-                    # On prend nb ligne de la matrice x modifiée,
-                    # une ligne s'en va à chaque itération
-                                d = dim(x)[1]
-                    # Si x est un vecteur, d = null dans R 
-                    #(oui il n'a pas de dimensions c'est comme ça épicétou)
-                                if (is.null(d)) {
-                        # On met arbitrairement la dimension en ligne d à 1
-                                        d = 1
-                        # On met arbitrairement le rand à 1 (bah oui il reste plus qu'une ligne)
-                                        rand = 1
-                        # La matrice des données mélangées prend les valeurs de x en colonne 1 et 2 
-                                        data[i,c(1,2)] = x
-                        # Pareil pour la matrice des classes mélangées
-                                        classe[i, c(1,2)] = t
-                                } else {
-                        # On prend un nombre aléatoire entre 1 et le nombre de lignes de x
-                                        rand = sample(1:d, 1)
-                                        data[i,1] = x[rand,1]
-                                        data[i,2] = x[rand,2]
-                                        x = x[-rand,]
-                                        
-                                        classe[i,1] = t[rand,1]
-                                        classe[i,2] = t[rand,2]
-                                        t = t[-rand,]
-                                }
 
-                                data[i,3] = ki
-                                i = i + 1
-                        }
-        }
-        result = new.env()
-        result$data <- data
-        result$classe <- classe
-        
-        return (result)
+	# Préparation de la matrice des données mélangées
+	data = matrix(nrow = n, ncol = 3)
+	# Préparation de la matrice des classes mélangées
+	classe = matrix(nrow = n, ncol = 2)
+
+	i = 1
+	m = n / p
+	# Iterateur des partitions de données        
+	for (ki in 1:p) {
+		# Iterateur du nombre d'éléments par partition de données
+		for (j in 1:m) {
+			# On prend nb ligne de la matrice x modifiée,
+			# une ligne s'en va à chaque itération
+			d = dim(x)[1]
+			# Si x est un vecteur, d = null dans R 
+			#(oui il n'a pas de dimensions c'est comme ça épicétou)
+			if (is.null(d)) {
+				# On met arbitrairement la dimension en ligne d à 1
+				d = 1
+				# On met arbitrairement le rand à 1 (bah oui il reste plus qu'une ligne)
+				rand = 1
+				# La matrice des données mélangées prend les valeurs de x en colonne 1 et 2 
+				data[i,c(1,2)] = x
+				# Pareil pour la matrice des classes mélangées
+				classe[i, c(1,2)] = t
+			} else {
+				# On prend un nombre aléatoire entre 1 et le nombre de lignes de x
+				rand = sample(1:d, 1)
+				data[i,1] = x[rand,1]
+				data[i,2] = x[rand,2]
+				x = x[-rand,]
+
+				classe[i,1] = t[rand,1]
+				classe[i,2] = t[rand,2]
+				t = t[-rand,]
+			}
+
+			data[i,3] = ki
+			i = i + 1
+		}
+	}
+	result = new.env()
+	result$data <- data
+	result$classe <- classe
+
+	return (result)
 }
 
 t_sexe = simul(x_sexe, T_sexe, n, p)
@@ -835,6 +835,28 @@ png(file = "plots/tp3_probas_erreur_sexe.png")
 plot(probas_sexe, xlab = "Modèle", ylab ="Probabilité d'erreur", main = "Probabilités d'erreur de chaque modèle pour le sexe")
 dev.off()
 
+# LDA sur les sexes
+crabe = crabs[,c(4, 5, 2)]
+crabe.lda <- lda(crabe[,1:2], crabe$sex)
+
+x1p = seq(min(crabe$FL), max(crabe$FL), length = len)
+x2p = seq(min(crabe$RW), max(crabe$RW), length = len)
+
+grille = data.frame(expand.grid(FL = x1p, RW = x2p))
+
+# Frontière de décision pour la lda
+ly = predict(crabe.lda, grille)
+lyp = ly$post[,1] - ly$post[,2]
+
+png(file = "plots/lda_q5_1.png")
+plot(crabe[,1:2], col = couleur3, main = "LDA Crabs selon le sexe")
+contour(x1p, x2p, matrix(lyp, len), add = TRUE, levels = 0, drawlabels = FALSE, col = 'red')
+dev.off()
+
+# Calcul de l'erreur empirique lda sur l'ensemble d'apprentissage
+n = dim(crabe)[1]
+ly <- predict(crabe.lda, crabe[ ,1:2])
+erreur1 <- sum(ly$class != crabe$sex) / n
 
 # 2.
 xp <- seq(min(t_sexe$data[,1]), max(t_sexe$data[,1]), length = len)
@@ -924,6 +946,29 @@ png(file = "plots/tp3_probas_erreur_couleur.png")
 plot(probas_color, xlab = "Modèle", ylab ="Probabilité d'erreur", main = "Probabilités d'erreur de chaque modèle pour la couleur")
 dev.off()
 
+# LDA sur les espèces
+crabe = crabs[,c(4, 5, 1)]
+crabe.lda <- lda(crabe[,1:2], crabe$sp)
+
+x1p = seq(min(crabe$FL), max(crabe$FL), length = len)
+x2p = seq(min(crabe$RW), max(crabe$RW), length = len)
+
+grille = data.frame(expand.grid(FL = x1p, RW = x2p))
+
+# Frontière de décision pour la lda
+ly = predict(crabe.lda, grille)
+lyp = ly$post[,1] - ly$post[,2]
+
+png(file = "plots/lda_q6_1.png")
+plot(crabe[ ,1:2], col = couleur4, main = "LDA Crabs selon l'espèce")
+contour(x1p, x2p, matrix(lyp, len), add = TRUE, levels = 0, drawlabels = FALSE, col = 'red')
+dev.off()
+
+# Calcul de l'erreur empirique lda sur l'ensemble d'apprentissage
+n = dim(crabe)[1]
+ly <- predict(crabe.lda, crabe[ ,1:2])
+erreur2 <- sum(ly$class != crabe$sp) / n
+
 # 2.
 len <- 50
 
@@ -967,3 +1012,4 @@ zp <- Z5[,1] - max(Z5[,2])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z5[,2] - max(Z5[,2])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
+
