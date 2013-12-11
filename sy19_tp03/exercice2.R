@@ -702,18 +702,26 @@ dev.off()
 n <- 200
 x_sexe <- log(cbind(crabs$FL, crabs$RW))
 T_sexe <- class.ind(crabs$sex)
+
 couleur1 <- rep("pink", n)
 couleur1[crabs$sex=="M"] <- "cyan"
 
-plot(x_sexe, col = couleur1)
+png(file = "plots/tp3_exo3_crabs_sexe.png")
+plot(x_sexe, col = couleur1, xlab = "log(FL)", ylab ="log(RW)", main = "Sexe des crabes en fonction des mesures FL et RW")
+dev.off()
 
 # Séparation selon la couleur
 x_color <- log(cbind(crabs$FL, crabs$RW))
 T_color <- class.ind(crabs$sp)
+
 couleur2 <- rep("orange", n)
 couleur2[crabs$sp == "O"] <- "blue"
 
-plot(x_color, col = couleur2)
+png(file = "plots/tp3_exo3_crabs_couleur.png")
+plot(x_color, col = couleur2, xlab = "log(FL)", ylab ="log(RW)", main = "Couleur des crabes en fonction des mesures FL et RW")
+dev.off()
+
+################################################################################
 
 # QUESTION 5
 
@@ -722,35 +730,47 @@ p = 5
 
 # À CHECKER POUR LA CLASSE 5
 simul <- function (x, t, n, p) {
-
+    
+      # Préparation de la matrice des données mélangées
         data = matrix(nrow = n, ncol = 3)
+      # Préparation de la matrice des classes mélangées
         classe = matrix(nrow = n, ncol = 2)
+      
         i = 1
         m = n / p
-		
+        # Iterateur des partitions de données        
         for (ki in 1:p) {
-        
-        	for (j in 1:m) {
+                # Iterateur du nombre d'éléments par partition de données
+                for (j in 1:m) {
+                    # On prend nb ligne de la matrice x modifiée,
+                    # une ligne s'en va à chaque itération
+                                d = dim(x)[1]
+                    # Si x est un vecteur, d = null dans R 
+                    #(oui il n'a pas de dimensions c'est comme ça épicétou)
+                                if (is.null(d)) {
+                        # On met arbitrairement la dimension en ligne d à 1
+                                        d = 1
+                        # On met arbitrairement le rand à 1 (bah oui il reste plus qu'une ligne)
+                                        rand = 1
+                        # La matrice des données mélangées prend les valeurs de x en colonne 1 et 2 
+                                        data[i,c(1,2)] = x
+                        # Pareil pour la matrice des classes mélangées
+                                        classe[i, c(1,2)] = t
+                                } else {
+                        # On prend un nombre aléatoire entre 1 et le nombre de lignes de x
+                                        rand = sample(1:d, 1)
+                                        data[i,1] = x[rand,1]
+                                        data[i,2] = x[rand,2]
+                                        x = x[-rand,]
+                                        
+                                        classe[i,1] = t[rand,1]
+                                        classe[i,2] = t[rand,2]
+                                        t = t[-rand,]
+                                }
 
-				d = dim(x)[1]
-				if (is.null(d)) {
-					d = 1
-					rand = 1
-					data[i,c(1,2)] = x
-					classe[i, c(1,2)] = t
-				} else {
-					rand = sample(1:d, 1)
-					data[i,1] = x[rand,1]
-					data[i,2] = x[rand,2]
-					x = x[-rand,]
-					
-					classe[i,1] = t[rand,1]
-					classe[i,2] = t[rand,2]
-					t = t[-rand,]
-				}
-				data[i,3] = ki
-				i = i + 1
-			}
+                                data[i,3] = ki
+                                i = i + 1
+                        }
         }
         result = new.env()
         result$data <- data
@@ -767,8 +787,15 @@ t_color = simul(x_color, T_color, n, p)
 couleur4 <- rep("orange", n)
 couleur4[t_color$classe[,1] == "0"] <- "blue"
 
-plot(t_sexe$data, col = couleur3)
-plot(t_color$data, col = couleur4)
+png(file = "plots/tp3_exo3_mixeddata_sexe.png")
+plot(t_sexe$data, col = couleur3, xlab = "log(FL)", ylab ="log(RW)", main = "Sexe des crabes en fonction des mesures FL et RW")
+dev.off()
+
+
+png(file = "plots/tp3_exo3_mixeddata_couleur.png")
+plot(t_color$data, col = couleur4, xlab = "log(FL)", ylab ="log(RW)", main = "Couleur des crabes en fonction des mesures FL et RW")
+dev.off()
+
 
 # Estimation sur la probabilité d'erreur sur le SEXE
 set.seed(1)
@@ -803,7 +830,11 @@ proba5 = proba_erreur_emp(t_sexe$classe[161:200], cp5)
 
 probas_sexe = c(proba1, proba2, proba3, proba4, proba5)
 pe = mean(probas_sexe)
-plot(probas_sexe)
+
+png(file = "plots/tp3_probas_erreur_sexe.png")
+plot(probas_sexe, xlab = "Modèle", ylab ="Probabilité d'erreur", main = "Probabilités d'erreur de chaque modèle pour le sexe")
+dev.off()
+
 
 # 2.
 xp <- seq(min(t_sexe$data[,1]), max(t_sexe$data[,1]), length = len)
@@ -817,7 +848,9 @@ Z3 <- predict(model3, grille)
 Z4 <- predict(model4, grille)
 Z5 <- predict(model5, grille)
 
+
 plot(t_sexe$data[41:200], col = couleur3[41:200])
+
 zp <- Z1[,1] - max(Z1[,2])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z1[,2] - max(Z1[,2])
@@ -886,7 +919,10 @@ proba5 = proba_erreur_emp(t_color$classe[161:200], cp5)
 
 probas_color = c(proba1, proba2, proba3, proba4, proba5)
 pe = mean(probas_color)
-plot(probas_color)
+
+png(file = "plots/tp3_probas_erreur_couleur.png")
+plot(probas_color, xlab = "Modèle", ylab ="Probabilité d'erreur", main = "Probabilités d'erreur de chaque modèle pour la couleur")
+dev.off()
 
 # 2.
 len <- 50
@@ -931,4 +967,3 @@ zp <- Z5[,1] - max(Z5[,2])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
 zp <- Z5[,2] - max(Z5[,2])
 contour(xp, yp, matrix(zp, len), add = TRUE, levels = 0, drawlabels = FALSE)
-
