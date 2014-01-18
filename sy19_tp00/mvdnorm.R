@@ -1,3 +1,7 @@
+# UV : SY19 - TP00
+# Fonction mvdnorm
+# Fichier : mvdnorm.R
+
 mvdnorm <- function(X, mu, Sigma)
 {
 	# computes the density of a multivariate normal distribution 
@@ -12,3 +16,4 @@ mvdnorm <- function(X, mu, Sigma)
 	density <- exp(-1/2*diag(Xc%*%ginv(Sigma)%*%t(Xc))) / ((2*pi)^(p/2)*det(Sigma)^(1/2))
 	return(density)
 }
+

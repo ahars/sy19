@@ -44,3 +44,4 @@ A = matrix(c(a, 0, 0, 1 / a), 2)
 sigma1 = landa1 * D1T %*% A %*% D1
 sigma2 = landa2 * D2T %*% A %*% D2
 sigma3 = landa2 * D3T %*% A %*% D3
+

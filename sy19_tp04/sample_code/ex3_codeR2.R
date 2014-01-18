@@ -1,0 +1,28 @@
+# Fonction noyau polynomiale K
+K <- function(xi, x) {
+	return ((xi * x + 1)^2)
+}
+
+# Fonction d'apprentissage g(x)
+g <- function(model,obs,x) {
+	
+	n = length(x)	# Abscisses
+	r = c(1:n)	# Creation de l'array des ordonnees	
+
+	for (i in 1:n) {
+		# Calcul de g(x) pour chaque abscisse x[i]
+		r[i] <- model$coefs[1] * K(obs[model$index[1]], x[i])
+		+ model$coefs[2] * K(obs[model$index[2]], x[i])
+		+ model$coefs[3] * K(obs[model$index[3]], x[i])
+		- model$rho
+	}
+	
+	# Retourne le vecteur des ordonnees g(x) calculees
+	return (r)
+}
+
+# Abscisses x
+> x = seq( from = 0, to = 6, by = 0.05)
+
+# Resultats g(x)
+> res = g(model, obs, x)
